@@ -1,21 +1,632 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Minclient by rarebit</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  </head>
-  <body>
-        <h2>RareBit</h2>
-        
-        <p>Minimal Rarebit client written in client-side Javascript/HTML</p>
+<!DOCTYPE html>
+<!--
+  Crude rarebit client
+-->
 
-        <p class="view"><a href="https://github.com/rarebit/minclient">View the Project on GitHub <small>rarebit/minclient</small></a></p>
+<html lang="en"> 
+<head>
+  <meta charset="utf-8">
+  <title>Rarebit Min Client</title> 
+  <meta content="rarebit min client" name="description">
+  <meta content="Rarebit" name="author">
+  <style>
+    body {
+      margin:2em 3em; color:#404040; background-color:#ffffff;
+      font-family:"Arial", sans-serif; font-size:93%; font-stretch:expanded;
+    }
+    table, td {
+      border:0; margin:0; padding:0; border-spacing:0; 
+      text-align:left; vertical-align:top;
+    }
+    table {width:100%;}
+    .tb {vertical-align:bottom;}
+    .tc {vertical-align:middle;}
+    td {width:47%;}
+    textarea {
+      width:98%; height:4em;
+      border:1px solid #d0d0d0; color:#404040;
+    }
+    button {
+      display:inline-block; margin:0; cursor:pointer; white-space:nowrap;
+      border:1px solid #b8b8b8; border-radius:3px;
+      background-color:#f0f0f0; color:#707070; 
+    }
+    button:hover {
+      background-color:#ffffff; border-color:#b0b0ff; color:#8080ff;
+    }
+    .btngo { 
+      background-image:linear-gradient(#f8f8f8,#b8e0b8);
+      background-image:-webkit-linear-gradient(top,#f8f8f8,#b8e0b8);
+    }
+    .btngo:active { 
+      background-image:linear-gradient(#e0f0e0,#e0f0e0);
+      background-image:-webkit-linear-gradient(top,#e0f0e0,#e0f0e0);
+    }
+    .panebtn, .toggledpanebtn {font-size:105%; border-radius:1px;}
+    .panebtn {background-color:#f4f4f4; border-color:#e0e0e0;}
+    .toggledpanebtn {background-color:white;}
+    .form {padding:0.1em 0.3em; background-color:#f0f0f0;}
+    .sep {width:6%;}
+    .brk {display:block; border-top:1px dashed black;}
+    .gap {display:block; font-size:0.2em;}
+    .hiddenpane {display:none;}
+    .visiblepane {display:inline-block; width:100%;}
+    .long {width:86%;}
+    .title {font-size:140%; font-weight:500;}
+    .hd {font-size:120%;}
+    .tt {font-family:"courier new","lucida console",monospace;}
+    .b {color:#606060; font-weight:600;}
+    .small {font-size:73%;}
+    .med {font-size:85%;}
+    .oneline {display:inline-block; white-space:nowrap;}
+    .right {float:right;}
+    .JSON {height:8em; font-size:90%;}
+    .JSONtx {height:20em; font-size:90%; border:1px solid #d0d0d0;}
+    .readonly {background-color:#f8f8f8; border:1px solid #d0d0d0;}
+    .raw {font-size:90%; height:8em;}
+    .CIDinp, .autinp, .owninp, .keyinp, .pubinp, .textinp, .inp {
+      border:1px solid #d0d0d0; color:#404040;
+    }
+    .textinp {height:8em;}
+    .pubinp {font-size:90%; height:4em; color:#606060;}
+    .keyinp, .err {color:#e04040;}
+    .CID, .CIDinp, .qty {color:#30c030; font-size:110%;}
+    .author, .autinp {color:#4040c0; font-size:110%;}
+    .owner, .owninp {color:#c04040; font-size:110%;}
+    .authorerr {background-color:#303030; color:#ffffff; font-size:110%;}
+    .CIDinp, .autinp, .owninp {font-size:105%;}
+  </style>
+  <script src="../../lib/js/extern/bitcoinjs-min.js"></script>
+  <script src="../../lib/js/extern/message.js"></script>
+  <script src="../../lib/js/extern/rfc1751.js"></script>
+  <script src="../../lib/js/extern/mbitcoinjs.js"></script>
+  <script src="../../lib/js/extern/impexp.js"></script>
+  <script src="../../lib/js/rb_cert.js"></script>
+  <script src="../../lib/js/rb_tx.js"></script>
+  <script src="rb_minclient.js"></script>
+</head>
 
-        <p>
-          <img src="http://imageshack.com/a/img4/5824/cpp4.gif">
-        </p>
-        
-  </body>
+<body onload="pgload()">
+
+
+<table><tr><td style="width:80%;">
+<span class="title">Rarebit Min Client</span> 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<span class="med"></span>
+
+<br/>
+<br/>
+
+<div class="visiblepane">
+<button id="certbtn" class="panebtn" onclick="selectPane('certpane');"
+                 title="Create and validate certificates">Author</button>
+<button id="issuebtn" class="panebtn" onclick="selectPane('issuepane');"
+                 title="Issue editions">Issue</button>
+<button id="transferbtn" class="panebtn" onclick="selectPane('transferpane');"
+                 title="Transfer units to new owners">Transfer</button>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+<button id="provenancebtn" class="panebtn"
+        onclick="selectPane('provenancepane');"
+        title="Find and verify lots">Search</button>
+<button id="seedbtn" class="panebtn" onclick="selectPane('seedpane');"
+         title="Transaction cache used for searches and to fund seeding/fees">
+                Cache</button>
+<button id="utilbtn" class="panebtn" onclick="selectPane('utilpane');"
+                 title="Generate bitcoin keypairs">Utilities</button>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+<button id="introbtn" class="toggledpanebtn"
+        onclick="selectPane('intropane');"
+        title="Intro screen">?</button>
+</div>
+
+</td><td>
+<br/>
+<div class="right">
+</div>
+</td></tr></table>
+
+<div class="gap">&nbsp;</div>
+<div class="brk"></div>
+<br/>
+<br/>
+
+
+<div id="intropane" class="visiblepane">
+<br/>
+  <div style="width:80%">
+    This is a baseline reference client 
+    for the Rarebit
+    protocol and javascript library.
+    It runs in the browser as a local process
+    (no internet connection is needed).  
+    Development and testing was performed on recent releases of 
+    the Firefox and Chrome desktop browsers.
+    <br/>
+    <br/>
+    <span class="b">Author</span>:
+    Used to sign a work.  Creates a certificate to 
+    accompany the work, and generates a bitcoin address 
+    to uniquely refer to the signed work (a certificate ID, or CID).
+    <br/>
+    <br/>
+    <span class="b">Issue</span>:  
+    Used to issue editions of a signed work.
+    Creates bitcoin transactions that record the 
+    CID and quantity.
+    <br/>
+    <br/>
+    <span class="b">Transfer</span>: 
+    Used to transfer units of an edition to new owners.
+    <br/>
+    &nbsp;&nbsp;<span class="small">1.</span>  
+    Creates bitcoin transactions in which the author
+    signs over units to new owners.
+    <br/>
+    &nbsp;&nbsp;<span class="small">2.</span>  
+    Creates transactions in which current owners
+    sign over units to new owners.
+    <br/>
+    <br/>
+    Signing a work will setup the Issue section, and
+    issuing an edition will setup the Transfer section.
+    <br/>
+    <br/>
+    Spendable outputs are 
+    needed to pay for seeding and fees when 
+    transactions are created. 
+    Demo seed data is preloaded in the cache.
+    This early beta has been tested only on
+    simulated blockchain data, but it will create transactions
+    that can be broadcast to the bitcoin network.
+    Transactions should be carefully scrutinized 
+    before broadcasting them.
+    <br/>
+    <br/>
+    <table><tr><td class="tc">
+    <a href="../../doc/rbprimer.html" target=_blank
+         title="The purpose of the Rarebit protocol and how it works">
+                        Protocol overview/whitepaper</a>
+    </td><td>
+    <div class="right">
+    <a href="../../index.html" target=_blank 
+       title="Rarebit project"><img src="../../doc/rblogosm.png"/></a>
+    &nbsp; &nbsp; &nbsp;
+    </div>
+    </td></tr></table>
+  </div>
+</div>
+
+
+<div id="certpane" class="hiddenpane">
+<span class="hd">Create a Signature Certificate</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.createCertificate()</span>
+<p>
+  <table><tr><td>
+    <span class="med">Enter some text
+       (a file can be referenced by 
+           entering its hash and a title):</span>
+    <br/>
+    <textarea class="textinp" id="cert_statement"></textarea>
+    <br/>
+    <span class="med">Author's private key 
+                      or brainwallet passphrase:</span>
+    <br/>
+    <textarea class="keyinp" id="cert_key"></textarea>
+    <br/><br/>
+    <button class="btngo" onclick="certCreate();">Sign</button>
+    <br/><br/>
+    <span class="hd err" id="cert_err">&nbsp;</span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Resulting certificate:</span>
+    <br/>
+    <textarea readonly class="JSON readonly" id="cert_JSON"></textarea>
+    <br/><br/>
+    <span class="med">Certificate ID (CID):</span>
+    <br/>
+    <span class="tt CID" id="cert_CID">&nbsp;</span>
+    <br/><br/>
+    <span class="med">Author: </span>
+    <br/>     
+    <span class="tt author" id="cert_issuer">&nbsp;</span>
+    <br/><br/>
+    <span class="small">
+       <i>A unique signature and CID are produced with each signing</i></span>
+  </td></tr></table>
+</p>
+<p>
+<div class="brk"></div>
+<br/>
+<span class="hd">Verify a Certificate</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.createCertificateFromJSON()</span>
+</p>
+<p>
+</p>
+  <table><tr><td>
+    <span class="med">Certificate:</span>
+    <br/>
+    <textarea class="JSON" id="ver_JSON"></textarea>
+    <br/><br/>
+    <button class="btngo" onclick="certVerify();">Verify</button>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Certificate ID (CID):</span>
+    <br/>
+    <span class="tt CID" id="ver_CID">&nbsp;</span>
+    <br/><br/>
+    <span class="med">Author: </span>
+    <br/>
+    <span class="tt author" id="ver_issuer">&nbsp;</span>
+    <br/><br/>
+    <span class="hd err" id="ver_err"></span>
+  </td></tr></table>
+</div>
+
+
+<div id="seedpane" class="hiddenpane">
+<span class="hd">Transaction Cache</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createSeedWallet()</span>
+<p>
+  <table><tr><td>
+    <span class="med">
+      Transaction data:</span>
+    <br/>
+    <textarea class="JSONtx" id="txdb_data"></textarea>
+    <br/><br/>
+    <button class="btngo" onclick="txdbCreate();">Verify data</button>
+    <br/><br/>
+    <span class="hd err" id="txdb_err"></span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <div class="med">
+      The transaction cache holds unspent outputs 
+      needed to pay for seeding/fees
+      when new transactions are created, 
+      and also is queried when searching for lots and 
+      tracing their histories.
+      <br/><br/>
+      Transactions can be real or make-believe.
+      New transactions will be added to the cache as they are
+      created, so the data will simulate
+      actual branches of transactions on the blockchain.
+      When real bitcoin data is used and new transactions are 
+      broadcast, the cache should remain in sync with the blockchain.
+      <br/><br/>
+      BBE JSON formatted text is expected, which can be copied/pasted from:
+      <br/><br/>
+      <span class="tt">&nbsp; &nbsp; 
+        http://blockexplorer.com/q/mytransactions/</span><b><i>address</i></b>
+      <br/>
+      <span class="tt">&nbsp; &nbsp; </span>
+      [<a href="http://blockexplorer.com/q/mytransactions/"
+          target=_blank>link</a>]
+      <br/><br/>
+      Data for individual transactions can be obtained from:
+      <br/><br/>
+      <span class="tt">&nbsp; &nbsp; 
+        http://blockexplorer.com/rawtx/</span><b><i>txhash</i></b>
+      <br/>
+      <span class="tt">&nbsp; &nbsp; </span>
+      [<a href="http://blockexplorer.com/rawtx/" 
+          target=_blank>link</a>]
+      <br/><br/>
+      and combined as follows:
+      <span class="tt">{ "1": </span><i>txdata</i><span class="tt">, 
+                         "2": </span><i>txdata</i><span class="tt">, 
+                         ... }</span>
+      <br/><br/>
+      Full Rarebit clients would typically 
+      load transaction data from bitcoin exit nodes as needed.
+    </div>
+  </td></tr></table>
+</p>
+</div>
+
+
+<div id="issuepane" class="hiddenpane">
+<span class="hd">Issue Edition (Create Origination Transaction)</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createOrigination()</span>
+<p>
+  <table><tr><td>
+    <span class="med">Certificate:</span>
+    <br/>
+    <textarea class="JSON" id="origtx_cert"></textarea>
+    <br/>
+    <span class="med">
+      Author's private key or brainwallet passphrase:</span>
+    <br/>
+    <textarea class="keyinp" id="origtx_key"></textarea>
+    <br/>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    <span class="med">Quantity:</span>
+      <input class="inp" id="origtx_qty" value="10"></input>
+    <!-- 
+         uncomment to allow multiple lots per origination tx
+    <button class="btngo" 
+            onclick="origtx_multlotsenabled=true;origtxLotsAddQty();">
+                      Add lot</button>
+    <button class="btngo" onclick="origtxLotsClear();">Reset</button>
+    -->
+    <br/>
+    <div id="origtx_qtys"></div>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    <span class="med">
+      Private key needed to pay for 
+              seeding/fee and receive change:</span>
+    <br/>
+    <span class="small">
+       <i>Sufficient outputs in cache must be spendable 
+             with this key</i></span>
+    <br/>
+    <textarea class="keyinp" id="origtx_seedkey"></textarea>
+    <br/>
+    <span class="med">Fee:</span>
+    <input id="origtx_fee" class="inp" value="0.00001"></input>
+    <br/>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    <button class="btngo" onclick="origtxCreate();">
+                     Create transaction</button>
+    <br/><br/>
+    <span class="hd err" id="origtx_err">&nbsp;</span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Resulting transaction (raw):</span>
+    <br/>
+    <textarea readonly class="raw readonly" id="origtx_raw"></textarea>
+    <div class="small">
+      <i>Raw transaction can be broadcast by pasting to
+              <a href="http://www.blockchain.info/pushtx" target=_blank>
+                             http://www.blockchain.info/pushtx</a></i>
+    </div>
+    <br/>
+    <br/>
+    <span class="med">Resulting transaction (JSON):</span>
+    <br/>
+    <textarea readonly class="JSONtx readonly" id="origtx_JSON"></textarea>
+    <br/><br/>
+    CID: <span class="tt CID" id="origtx_CID">&nbsp;</span>
+    <br/><br/>
+    Author: <span class="tt author" id="origtx_issuer"></span>
+  </td></tr></table>
+</p>
+</div>
+
+
+<div id="transferpane" class="hiddenpane">
+<span class="hd">Transfer Units to New Owners (Create Transfer Transaction)</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createTransfer()</span>
+<p>
+  <table><tr><td>
+    <span class="med">Certificate:</span>
+    <br/>
+    <textarea class="JSON" id="xfertx_cert"></textarea>
+    <br/>
+    <span class="med">
+      Current owner's private key or brainwallet passphrase:</span>
+    <br/>
+    <textarea class="keyinp" id="xfertx_key"></textarea>
+    <br/>
+    <span class="small"><i>Units owned will be spent until output
+                quantities satisfied, any units left over 
+                will be returned to owner</i></span>
+    <br/>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    New owners
+    <br/>
+    <br/>
+    <span class="med">
+      New owner's public key (long form of address):</span>
+    <br/>
+    <textarea class="pubinp" id="xfertx_pub"></textarea>
+    <br/>
+    <span class="med">Quantity to send to this new owner:</span>
+    <input id="xfertx_qty" value="" class="inp"></input>
+    <br/>
+    <br/>
+    <button class="btngo" onclick="xfertxNewOwnerAdd();">Add</button>
+    <button onclick="xfertxNewOwnerAdd(true);" class="btngo">
+               Add available quantity</button>
+    <button onclick="xfertxNewOwnersClear();" class="btngo">Clear</button>
+    <br/>
+    <div id="xfertx_newowners"></div>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    <span class="med">
+        Private key needed to pay fee and receive change:</span>
+    <br/>
+    <textarea class="keyinp" id="xfertx_seedkey"></textarea>
+    <br/>
+    <span class="med">Fee:</span>
+    <input id="xfertx_fee" class="inp" value="0.00001"></input>
+    <br/>
+    <br/>
+    <div class="brk"></div>
+    <br/>
+    <button class="btngo" onclick="xfertxCreate();">
+                    Create transaction</button>
+    <br/><br/>
+    <span class="hd err" id="xfertx_err">&nbsp;</span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Resulting transaction (raw):</span>
+    <br/>
+    <textarea readonly class="raw readonly" id="xfertx_raw"></textarea>
+    <div class="small">
+      <i>Raw transaction can be broadcast by pasting to
+              <a href="http://www.blockchain.info/pushtx" target=_blank>
+                             http://www.blockchain.info/pushtx</a></i>
+    </div>
+    <br/>
+    <br/>
+    <span class="med">Resulting transaction (JSON):</span>
+    <br/>
+    <textarea readonly class="JSONtx readonly" id="xfertx_JSON"></textarea>
+    <br/><br/>
+    CID: <span class="tt CID" id="xfertx_CID">&nbsp;</span>
+    <br/><br/>
+    Author: <span class="tt author" id="xfertx_issuer">&nbsp;</span>
+  </td></tr></table>
+</p>
+</div>
+
+
+<div id="provenancepane" class="hiddenpane">
+<span class="hd">Find Valid Lots</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.Tx.queryLots()</span>
+<p>
+  <table><tr><td>
+    <span class="med">Certificate ID (CID):</span>
+    <br/>
+    <input id="lots_CID" class="long tt CIDinp"></input>
+    <br/><br/>
+    <span class="med">Author's address (optional):</span>
+    <br/>
+    <input id="lots_issuer" class="long tt autinp"></input>
+    <br/>
+    <span class="small"><i>If ommitted, author will be extracted but 
+                        not verified (origination may be fake)</i></span>
+    <br/><br/>
+    <span class="med">Current owner's address (optional):</span>
+    <br/>
+    <input id="lots_owner" class="long tt owninp"></input>
+    <br/><br/>
+    <button class="btngo" onclick="lotsFind();">Find</button>
+    <br/><br/>
+    <span class="hd err" id="lots_err"></span>
+    <div id="lots_valid"></div>
+    <div id="lots_invalid"></div>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Trace
+           (a record is generated for each output in branch):</span>
+    <br/>
+    <textarea readonly class="JSONtx readonly" id="lots1_graph"></textarea>
+    <br/><br/>
+    CID: <span class="tt CID" id="lots1_CID"></span>
+    <br/><br/>
+    Author: <span class="tt author" id="lots1_issuer">
+    </span><span class="tt authorerr" id="lots1_issuererr"></span>
+    <br/><br/>
+    Owned by: <span class="tt owner" id="lots1_owner"></span>
+    <br/><br/>
+    Quantity: <span class="tt qty" id="lots1_qty"></span>
+  </td></tr></table>
+</p>
+<p>
+<div class="brk"></div>
+<br/>
+<br/>
+<span class="hd">Trace a Lot's Provenance</span>
+&nbsp; &nbsp; <span class="med tt">Rarebit.Tx.traceLotProvenance()</span>
+</p>
+<p>
+  <table><tr><td>
+    <span class="med">Transaction hash:</span>
+    <br/>
+    <input id="lottrace_hash" class="long tt inp"></input>
+    <br/><br/>
+    <span class="med">Output index:</span>
+    <br/>
+    <input id="lottrace_index" class="med inp"></input>
+    <br/><br/>
+    <span class="med">Author's address (optional):</span>
+    <br/>
+    <input id="lottrace_issuerinp" class="long tt autinp"></input>
+    <br/>
+    <span class="small"><i>If ommitted, author will be extracted but 
+                        not verified (origination may be fake)</i></span>
+    <br/><br/>
+    <button class="btngo" onclick="lotTrace();">Trace</button>
+    <br/><br/>
+    <span class="hd err" id="lottrace_err">&nbsp;</span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Trace 
+                 (a record is generated for each output in branch):</span>
+    <br/>
+    <textarea readonly class="JSONtx readonly" id="lottrace_graph"></textarea>
+    <br/><br/>
+    CID: <span class="tt CID" id="lottrace_CID"></span>
+    <br/><br/>
+    Author: <span class="tt author" id="lottrace_issuer"></span>
+    <br/><br/>
+    Owned by: <span class="tt owner" id="lottrace_owner"></span>
+    <br/><br/>
+    Quantity: <span class="tt qty" id="lottrace_qty"></span>
+  </td></tr></table>
+</p>
+</div>
+
+
+<div id="utilpane" class="hiddenpane">
+<span class="hd">Generate Bitcoin Key/Address Pair</span>
+<p>
+  <table><tr><td>
+    <span class="med">Private key or brainwallet passphrase:</span>
+    <br/>
+    <textarea id="gen_key" class="keyinp"></textarea>
+    <br/><br/>
+    <button class="btngo" onclick="genKey(getel('gen_key'));">
+               Generate from entry</button>
+    <button class="btngo" onclick="genKey();">Random</button>
+    <br/><br/>
+    <span class="hd err" id="gen_err"></span>
+    <br/><br/>
+    <b>Mine vanity address</b>
+    <br/><br/>
+    <span class="med">Address substring:</span>
+    <br/>
+    <input id="gen_sub1" class="tt autinp"></input>
+    <br/>
+    <span class="med">2nd optional substring:</span>
+    <br/>
+    <input id="gen_sub2" class="tt autinp"></input>
+    <br/>
+    <span class="med">3rd optional substring:</span>
+    <br/>
+    <input id="gen_sub3" class="tt autinp"></input>
+    <br/><br/>
+    <button class="btngo" onclick="genMine();" id="gen_mine">Mine</button>
+    <br/><br/>
+    <span class="small"><i>Matches address '1substring...' 
+          (any one of the entries).
+    Generates random keypairs until match found.  
+    Long substrings may take many human lifetimes to find.
+    </i></span>
+  </td>
+  <td class="sep"></td>
+  <td>
+    <span class="med">Public key (long form of address):</span>
+    <br/>
+    <textarea readonly class="pubinp readonly" id="gen_pub"></textarea>
+    <br/><br/>
+    Address: <span class="tt author" id="gen_addr"></span>
+    <br/><br/>
+    <span class="small" id="gen_priv"></span>
+  </td></tr></table>
+</p>
+</div>
+
+
+</body>
 </html>
+
+
