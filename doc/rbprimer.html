@@ -1,13 +1,418 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>RareBit primer</title>
-  </head>
-  <body>
-        <h2>RareBit Pimer</h2>
-        
-        
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Rarebit Protocol Layer Overview / Whitepaper / FAQ</title>
+  <meta content="Rarebit overview / whitepaper / FAQ" name="description">
+  <meta content="Rarebit" name="author">
+  <style>
+    body {
+      margin:0; padding:0;
+      font-family:"Arial", sans-serif; font-size:85%;
+      color:#404040; background-color:#c8c8c8;
+      font-stretch:expanded;
+    }
+    table, td, .fit {
+      border:0; margin:0; padding:0; border-spacing:0; text-align:left;
+    }
+    .pg {
+      position:absolute; top:0; left:6em;
+      margin:0; padding:0em 2em;
+      background-color:white; width:52em;
+    }
+    .bar {
+      position:relative; top:0;
+      display:inline-block; width:100%;
+      border:0; margin:0; padding:0; padding-bottom:0.2em;
+    }
+    .u {text-decoration:underline;}
+    .b {font-size:85%; font-weight:600;}
+    .plain {font-family:"Arial", sans-serif; font-size:85%;}
+    .title {font-size:150%;}
+    .faqq {font-size:130%;}
+    .med {font-size:95%;}
+    .tt {font-family:"courier new","lucida console",monospace;font-size:95%;}
+    .small {font-size:80%;}
+    .verysmall, .more {font-size:60%;}
+    .more {cursor:pointer;}
+    .oneline {display:inline-block; white-space:nowrap;}
+    .right {float:right;}
+  </style>
+</head>
+
+<body><div class="pg">
+
+
+<div class="fit right">
+  <br/>
+  <span class="small right plain">
+    <a href="../index.html"
+     title="Rarebit project">Project</a>
+    &nbsp;|&nbsp; 
+    <a href="../client/min/index.html"
+       title="Javascript web client">Min Client</a>
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <a href="http://creativecommons.org/licenses/by/3.0/"
+        title="License of content on this page">cc-by</a>
+  </span>
+</div>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<span class="title oneline">Rarebit Overview</span>
+
+<div>
+&nbsp;
+</div>
+
+<p id="overview">
+<br/>
+<span class="faqq">Abstract</span>
+</p>
+
+
+<p>
+Rarebit is a protocol designed to enable collectible digital works to be issued and traded on the bitcoin network.
+</p>
+
+<p>
+Using Rarebit client software,
+an artist or author 
+can issue digitally signed limited editions of a work online,
+and collectors can trade units of the edition 
+with the assurance they are authentic.
+</p>
+
+<p>
+Protocol summary:
+    <br/>
+    <br/>
+    <span class="b">1.</span>
+    A work is signed by the author:
+    A digital certificate is created to
+    accompany the work, and a bitcoin address is
+    generated that uniquely identifies the signed work.
+    <br/>
+    <br/>
+    <span class="b">2.</span>
+    Editions of a signed work are issued by the author:
+    Transactions are broadcast to the bitcoin network that
+    record the work's ID and quantity.
+    <br/>
+    <br/>
+    <span class="b">3.</span>
+    Units of an edition are aquired and traded among collectors:
+    <br/>
+    <br/>
+    &nbsp; &nbsp; <span class="b">a.</span>
+    The author signs over units to collectors in new transactions.
+    <br/>
+    &nbsp; &nbsp; <span class="b">b.</span>
+    Current owners sign over units to new owners 
+    in additional transactions.
+    <br/>
+    <br/>
+    <span class="b">4.</span>
+    The provenance of a unit is demonstrated:
+    The linked transactions stored in bitcoin's public ledger
+    are scrutinized to ensure a unit originates from the author
+    and has not been duplicated.
+</p>
+
+<p>
+A work is typically a digital file such as a photo, 
+video, or ebook.  In the simplest case,
+a work is just some text, which can
+relate to anything an author can imagine and make a statement concerning.
+</p>
+
+<p>
+Rarebit, like bitcoin, is "trustless", i.e.,
+confidence is placed in cryptographic proof instead of
+a central authority.
+</p>
+
+<p>
+Rarebit is not 
+a copyright enforcement ("digital rights management")
+scheme.  The protocol defines no capability
+for restricting how a work can be consumed. 
+Rarebit merely distinguishes collectible copies
+from all others.
+</p>
+
+
+<p id="howitworks">
+<br/>
+<span class="faqq">Protocol layer specification</span>
+</p>
+
+<p>
+A standard bitcoin address is used to identify an author or
+other entity who issues editions or lots of some work.
+The work is signed with the author's private key, 
+producing a certificate
+<a href="#sig"><span class="verysmall">[*]</span></a>.
+</p>
+
+<p>
+Another bitcoin address is generated which 
+uniquely refers to the signed work
+(the certificate ID, or <span class="med">CID</span>).
+The certificate's hash is used to create
+the <span class="med">CID</span>.
+</p>
+
+<p>
+<br/>
+<img src="http://imageshack.com/a/img812/1061/m38j.png"/>
+<br/>
+<br/>
+</p>
+
+<p>
+To issue an edition, a transaction is broadcast to the bitcoin network 
+which includes a special output 
+<a href="#output"><span class="verysmall">[*]</span></a>
+that encodes the owner's bitcoin address,
+the <span class="med">CID</span>, and a quantity specifying the number
+of units to issue.
+In the origination output, the issuer is the owner.
+A Rarebit output is designed so that only the owner can redeem it using 
+a Rarebit client.
+</p>
+
+<p>
+<br/>
+<img src="http://imageshack.com/a/img197/5774/ccjs.png"/>
+<br/>
+<br/>
+</p>
+
+<p>
+The quantity is recorded in the output's value field, where
+one unit is equal to one satoshi.
+For example, 1000 units would show as 
+<span class="tt">0.00001</span><span class="verysmall">BTC</span> 
+when viewing the transaction in a block explorer.
+The origination transaction is seeded with sufficient
+funds to cover the quantity and any fee required.
+</p>
+
+<p>
+Units are transferred to one or more new owners in the same 
+way normal coins are spent, i.e., the output is signed in an input of 
+a new transaction.  The new transaction includes Rarebit
+outputs recording the new owner(s).
+</p>
+
+<p>
+<br/>
+<img src="http://imageshack.com/a/img4/4751/poi5.png"/>
+<br/>
+</p>
+
+<p>
+Rarebit transactions may contain any number of non-Rarebit inputs and 
+outputs.  Typically, standard inputs would be used
+to add funds for fees and seeding, and standard outputs would be
+used to refund the change from those inputs.
+</p>
+
+<p>
+<br/>
+<span class="faqq">Validating ownership claims</span>
+</p>
+
+<p>
+Since it is possible to forge 
+what appear to be legitimate Rarebit outputs, 
+the provenance of a given unit must be examined to 
+determine if it is valid.
+The unit must trace back to an
+originating output that was redeemed by the issuer, 
+otherwise the entire
+branch of transaction outputs is rejected.
+The author's certificate should also be valid and meet 
+expectations, i.e., its <span class="med">CID</span> should be 
+regenerated and compared to the one in the given output.
+</p>
+
+<p>
+<br/>
+<img src="http://imageshack.com/a/img202/5236/kk49.png"/>
+<br/>
+<br/>
+</p>
+
+<p>
+In addition, since it is possible for a legitimate owner to 
+forge outputs containing duplicated units, 
+output quantities for each transaction in a branch must sum
+to corresponding input quantities.
+</p>
+
+<p>
+<br/>
+<img src="http://imageshack.com/a/img31/5868/ym8r.png"/>
+<br/>
+<br/>
+</p>
+
+<p>
+<br/>
+<span class="faqq">Some technical details</span>
+</p>
+
+<p id="output">
+A Rarebit lot is recorded in a multi-signature bitcoin output 
+requiring two signatures for redemption (M=2, N=2).  
+One signature is calculated from the owner's private key, and 
+the other is calculated from the hash of the associated 
+certificate, which is treated as a private key
+(the hash takes the place of
+the random number generated when producing random keys normally).
+The <span class="med">CID</span> is simply the
+standard bitcoin address derived from that private key in the usual way.
+</p>
+
+<p>
+The motivation for requiring two signatures is to protect 
+Rarebit outputs from accidental redemption by normal bitcoin wallets.
+Since a certificate hash is not likely to be imported into a wallet
+as a private key (at least not unintentionally), normal wallets
+will not be able to spend Rarebit outputs.
+</p>
+
+<p>
+A Rarebit output in JSON form looks like:
+<div class="tt small">
+{
+<br/>
+&nbsp; "value": "0.0000001",
+<br/>
+&nbsp; "scriptPubKey": "OP_2 
+<br/>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+0417c0114834f5f92557457fdda64be7f753dedf5f8e5a0212bf28af1e49801a813952571
+<br/>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+a34877117dfdc193abde7b7f1d6421cf0bde5d04a5e3eb85d713c07be 
+<br/>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+04338974af6cecbf6e265fd215fa17e7b2702890948b7f005c17b76ed3edf63bfbd28e70e
+<br/>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+77e6e8bf0102bd78d9d0f5b2278e1cb044608d55071cd78c069895f15 
+<br/>
+&nbsp; &nbsp; 
+&nbsp; &nbsp; 
+OP_2 OP_CHECKMULTISIG",
+<br/>
+&nbsp; "M": 2,
+<br/>
+&nbsp; "N1": "13gwL7pTe6Pn42XMTKJPpWJYkczHFCudoc",
+<br/>
+&nbsp; "N2": "12Z2cnYgeUyDzw2weuRcXiUQeWy39BjYtd"
+<br/>
+      }
+<br/>
+<br/>
+</div>
+Shown is a lot of 10 units.  N1 is the <span class="med">CID</span>, and N2 is the owner.
+</p>
+
+<p id="sig">
+A Rarebit certificate looks like:
+
+<div class="tt small">
+{
+<br/>
+&nbsp; "signature": 
+"G4ERv/4YqX1s9gKv54eSjTs6FV1olN0o8PfTlibrfEkn
+<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+SugBOdq5Z2PzpJlUyvQn7hE3+wDmdsBxnVr+4O8w82A=",
+<br/>
+&nbsp; "content": {
+<br/>
+  &nbsp; &nbsp; "signer": "11126ij2aRzVDCTixDBVZ4ft2LS2KJmZUC",
+<br/>
+&nbsp; &nbsp; "date": 
+  "Sat Nov 30 2013 12:12:12 GMT-0800 (Pacific Standard Time)",
+<br/>
+&nbsp; &nbsp; "clientcontent": {
+<br/>
+&nbsp; &nbsp; &nbsp; "work": "foo bar"
+<br/>
+&nbsp; &nbsp; }
+<br/>
+&nbsp; }
+<br/>
+}
+<br/>
+<br/>
+</div>
+The <span class="tt">content</span> field, in compressed form 
+(without spaces), is the "message" that is signed.  
+The compressed certificate including the signature 
+is hashed to produce the 
+<span class="med">CID</span>. 
+</p>
+<p>
+Information specific to the client is placed in the
+<span class="tt">content.clientcontent</span> field
+prior to signing.
+</p>
+
+
+<!--<p id="otheruses">
+<br/>
+<b>Possible other uses</b>
+</p>
+
+<p>
+Although originally developed for creative works,
+the Rarebit protocol is general and can potentially 
+be used to issue and trade many types of assets,
+including financial instruments like stocks and bonds.
+The "work" is these cases could be a text description
+of a contract or title, which might include, 
+for example, a bond coupon payment 
+schedule or a deed to real property.
+</p>
+-->
+
+
+<p>
+<br/>
+<b><i>References</i></b>
+</p>
+
+<p>
+Colored coin protocols are similar in some respects to Rarebit
+(a Rarebit <span class="med">CID</span>
+can be thought of as a user defined color), 
+see <i>BitcoinX.pdf by Meni Rosenfeld</i>.
+</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+<p>
+<span class="small"><i>Last updated 2013.12.02</i></span>
+</p>
+
+
+</div></body>
 </html>
