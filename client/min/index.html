@@ -12,7 +12,7 @@
   <style>
     body {
       margin:2em 3em; color:#404040; background-color:#ffffff;
-      font-family:"Arial", sans-serif; font-size:93%; font-stretch:expanded;
+      font-family:"Arial", sans-serif; font-size:100%; font-stretch:expanded;
     }
     table, td {
       border:0; margin:0; padding:0; border-spacing:0; 
@@ -21,15 +21,17 @@
     table {width:100%;}
     .tb {vertical-align:bottom;}
     .tc {vertical-align:middle;}
+    .tright {text-align:right;}
     td {width:47%;}
     textarea {
       width:98%; height:4em;
       border:1px solid #d0d0d0; color:#404040;
     }
+    a:visited {color:gray;}
     button {
       display:inline-block; margin:0; cursor:pointer; white-space:nowrap;
-      border:1px solid #b8b8b8; border-radius:3px;
-      background-color:#f0f0f0; color:#707070; 
+      border:1px solid #b0b0b0; border-radius:3px;
+      background-color:#f0f0f0; color:#606060; font-size:100%;
     }
     button:hover {
       background-color:#ffffff; border-color:#b0b0ff; color:#8080ff;
@@ -42,18 +44,21 @@
       background-image:linear-gradient(#e0f0e0,#e0f0e0);
       background-image:-webkit-linear-gradient(top,#e0f0e0,#e0f0e0);
     }
-    .panebtn, .toggledpanebtn {font-size:105%; border-radius:1px;}
-    .panebtn {background-color:#f4f4f4; border-color:#e0e0e0;}
+    .panebtn, .toggledpanebtn {font-size:110%; border-radius:1px;}
+    .panebtn {border-color:#d0d0d0;}
     .toggledpanebtn {background-color:white;}
-    .form {padding:0.1em 0.3em; background-color:#f0f0f0;}
-    .sep {width:6%;}
-    .brk {display:block; border-top:1px dashed black;}
+    .form {
+      padding:0.2em 0.6em; background-color:#f8f8f8;
+      border:1px dotted gray; box-shadow:3px 3px 3px #888888;
+    }
+    .sep {width:8%;}
+    .brk {display:block; border-top:1px dashed gray;}
     .gap {display:block; font-size:0.2em;}
     .hiddenpane {display:none;}
     .visiblepane {display:inline-block; width:100%;}
     .long {width:86%;}
     .title {font-size:140%; font-weight:500;}
-    .hd {font-size:120%;}
+    .hd {font-size:120%; font-weight:600;}
     .tt {font-family:"courier new","lucida console",monospace;}
     .b {color:#606060; font-weight:600;}
     .small {font-size:73%;}
@@ -62,7 +67,7 @@
     .right {float:right;}
     .JSON {height:8em; font-size:90%;}
     .JSONtx {height:20em; font-size:90%; border:1px solid #d0d0d0;}
-    .readonly {background-color:#f8f8f8; border:1px solid #d0d0d0;}
+    .readonly {background-color:#f0f0f0; border:1px solid #d0d0d0;}
     .raw {font-size:90%; height:8em;}
     .CIDinp, .autinp, .owninp, .keyinp, .pubinp, .textinp, .inp {
       border:1px solid #d0d0d0; color:#404040;
@@ -89,7 +94,7 @@
 <body onload="pgload()">
 
 
-<table><tr><td style="width:80%;">
+<table><tr><td style="width:100%;">
 <span class="title">Rarebit Min Client</span> 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 <span class="med"></span>
@@ -98,27 +103,30 @@
 <br/>
 
 <div class="visiblepane">
-<button id="certbtn" class="panebtn" onclick="selectPane('certpane');"
+  <button id="certbtn" class="panebtn" onclick="selectPane('certpane');"
                  title="Create and validate certificates">Author</button>
-<button id="issuebtn" class="panebtn" onclick="selectPane('issuepane');"
+  <button id="issuebtn" class="panebtn" onclick="selectPane('issuepane');"
                  title="Issue editions">Issue</button>
-<button id="transferbtn" class="panebtn" onclick="selectPane('transferpane');"
-                 title="Transfer units to new owners">Transfer</button>
-&nbsp; &nbsp; 
-&nbsp; &nbsp; 
-<button id="provenancebtn" class="panebtn"
+  <button id="transferbtn" class="panebtn" 
+          onclick="selectPane('transferpane');"
+          title="Transfer units to new owners">Transfer</button>
+  &nbsp; &nbsp; 
+  &nbsp; &nbsp; 
+  <button id="provenancebtn" class="panebtn"
         onclick="selectPane('provenancepane');"
         title="Find and verify lots">Search</button>
-<button id="seedbtn" class="panebtn" onclick="selectPane('seedpane');"
-         title="Transaction cache used for searches and to fund seeding/fees">
+  <button id="seedbtn" class="panebtn" onclick="selectPane('seedpane');"
+       title="Transaction cache used for searches and to fund seeding/fees">
                 Cache</button>
-<button id="utilbtn" class="panebtn" onclick="selectPane('utilpane');"
+  <button id="utilbtn" class="panebtn" onclick="selectPane('utilpane');"
                  title="Generate bitcoin keypairs">Utilities</button>
-&nbsp; &nbsp; 
-&nbsp; &nbsp; 
-<button id="introbtn" class="toggledpanebtn"
-        onclick="selectPane('intropane');"
-        title="Intro screen">?</button>
+  &nbsp; &nbsp; 
+  &nbsp; &nbsp; 
+  <div class="right">
+    <button id="introbtn" class="toggledpanebtn"
+            onclick="selectPane('intropane');"
+            title="Intro screen">?</button>
+  </div>
 </div>
 
 </td><td>
@@ -135,15 +143,33 @@
 
 <div id="intropane" class="visiblepane">
 <br/>
-  <div style="width:80%">
+  <table><tr><td style="width:70%;">
     This is a baseline reference client 
     for the Rarebit
     protocol and javascript library.
-    It runs in the browser as a local process
-    (no internet connection is needed).  
-    Development and testing was performed on recent releases of 
-    the Firefox and Chrome desktop browsers.
     <br/>
+    <br/>
+    The Rarebit protocol is designed to enable 
+    collectible digital works to be issued and traded 
+    on the bitcoin network.
+    Using this client,
+    an artist or author 
+    can issue digitally signed limited editions of a work online,
+    and collectors can trade units of the edition 
+    with the assurance they are authentic.
+    <br/>
+    <br/>
+    This client runs locally
+    in the browser.
+    Development and testing was performed on recent releases of 
+    the Firefox and Chrome desktop browsers.  Since Chrome compiles
+    javascript, crypto will run much faster in Chrome than in Firefox
+    (refer to Mozilla's website for announcements about 
+    their upcoming compiler).
+    <br/>
+    <br/>
+    <br/>
+    <div class="brk"></div>
     <br/>
     <span class="b">Author</span>:
     Used to sign a work.  Creates a certificate to 
@@ -169,6 +195,9 @@
     sign over units to new owners.
     <br/>
     <br/>
+    <br/>
+    <div class="brk"></div>
+    <br/>
     Signing a work will setup the Issue section, and
     issuing an edition will setup the Transfer section.
     <br/>
@@ -182,28 +211,24 @@
     that can be broadcast to the bitcoin network.
     Transactions should be carefully scrutinized 
     before broadcasting them.
+  </td><td class="tright">
+    <a href="../../index.html" target=_blank 
+       title="Rarebit project"><img src="../../doc/rblogosm.png"/></a>
     <br/>
     <br/>
-    <table><tr><td class="tc">
     <a href="../../doc/rbprimer.html" target=_blank
          title="The purpose of the Rarebit protocol and how it works">
-                        Protocol overview/whitepaper</a>
-    </td><td>
-    <div class="right">
-    <a href="../../index.html" target=_blank 
-       title="Rarebit project"><img src="http://imageshack.com/a/img547/203/zkxe.png"/></a>
-    &nbsp; &nbsp; &nbsp;
-    </div>
-    </td></tr></table>
-  </div>
+                        Protocol Overview</a>
+  </td></tr></table>
 </div>
 
 
 <div id="certpane" class="hiddenpane">
 <span class="hd">Create a Signature Certificate</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.createCertificate()</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Enter some text
        (a file can be referenced by 
            entering its hash and a title):</span>
@@ -215,9 +240,10 @@
     <br/>
     <textarea class="keyinp" id="cert_key"></textarea>
     <br/><br/>
-    <button class="btngo" onclick="certCreate();">Sign</button>
+    <button class="btngo" onclick="certCreate();">
+              Sign and create certificate</button>
     <br/><br/>
-    <span class="hd err" id="cert_err">&nbsp;</span>
+    <span class="hd err" id="cert_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -236,21 +262,22 @@
     <span class="small">
        <i>A unique signature and CID are produced with each signing</i></span>
   </td></tr></table>
-</p>
-<p>
+<br/>
+<br/>
+<br/>
 <div class="brk"></div>
 <br/>
-<span class="hd">Verify a Certificate</span>
+<span class="hd">Verify Certificate</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.createCertificateFromJSON()</span>
-</p>
-<p>
-</p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Certificate:</span>
     <br/>
     <textarea class="JSON" id="ver_JSON"></textarea>
     <br/><br/>
     <button class="btngo" onclick="certVerify();">Verify</button>
+    <br/><br/>
   </td>
   <td class="sep"></td>
   <td>
@@ -270,8 +297,9 @@
 <div id="seedpane" class="hiddenpane">
 <span class="hd">Transaction Cache</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createSeedWallet()</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">
       Transaction data:</span>
     <br/>
@@ -320,23 +348,25 @@
       load transaction data from bitcoin exit nodes as needed.
     </div>
   </td></tr></table>
-</p>
 </div>
 
 
 <div id="issuepane" class="hiddenpane">
 <span class="hd">Issue Edition (Create Origination Transaction)</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createOrigination()</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Certificate:</span>
     <br/>
     <textarea class="JSON" id="origtx_cert"></textarea>
+    <br/>
     <br/>
     <span class="med">
       Author's private key or brainwallet passphrase:</span>
     <br/>
     <textarea class="keyinp" id="origtx_key"></textarea>
+    <br/>
     <br/>
     <br/>
     <div class="brk"></div>
@@ -355,6 +385,7 @@
     <br/>
     <div class="brk"></div>
     <br/>
+    <br/>
     <span class="med">
       Private key needed to pay for 
               seeding/fee and receive change:</span>
@@ -365,16 +396,18 @@
     <br/>
     <textarea class="keyinp" id="origtx_seedkey"></textarea>
     <br/>
+    <br/>
     <span class="med">Fee:</span>
     <input id="origtx_fee" class="inp" value="0.00001"></input>
     <br/>
     <br/>
     <div class="brk"></div>
     <br/>
+    <br/>
     <button class="btngo" onclick="origtxCreate();">
                      Create transaction</button>
     <br/><br/>
-    <span class="hd err" id="origtx_err">&nbsp;</span>
+    <span class="hd err" id="origtx_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -396,18 +429,19 @@
     <br/><br/>
     Author: <span class="tt author" id="origtx_issuer"></span>
   </td></tr></table>
-</p>
 </div>
 
 
 <div id="transferpane" class="hiddenpane">
 <span class="hd">Transfer Units to New Owners (Create Transfer Transaction)</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.Tx.createTransfer()</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Certificate:</span>
     <br/>
     <textarea class="JSON" id="xfertx_cert"></textarea>
+    <br/>
     <br/>
     <span class="med">
       Current owner's private key or brainwallet passphrase:</span>
@@ -419,9 +453,10 @@
                 will be returned to owner</i></span>
     <br/>
     <br/>
+    <br/>
     <div class="brk"></div>
     <br/>
-    New owners
+    <b>New owners</b>
     <br/>
     <br/>
     <span class="med">
@@ -442,10 +477,12 @@
     <br/>
     <div class="brk"></div>
     <br/>
+    <br/>
     <span class="med">
         Private key needed to pay fee and receive change:</span>
     <br/>
     <textarea class="keyinp" id="xfertx_seedkey"></textarea>
+    <br/>
     <br/>
     <span class="med">Fee:</span>
     <input id="xfertx_fee" class="inp" value="0.00001"></input>
@@ -453,10 +490,11 @@
     <br/>
     <div class="brk"></div>
     <br/>
+    <br/>
     <button class="btngo" onclick="xfertxCreate();">
                     Create transaction</button>
     <br/><br/>
-    <span class="hd err" id="xfertx_err">&nbsp;</span>
+    <span class="hd err" id="xfertx_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -478,15 +516,15 @@
     <br/><br/>
     Author: <span class="tt author" id="xfertx_issuer">&nbsp;</span>
   </td></tr></table>
-</p>
 </div>
 
 
 <div id="provenancepane" class="hiddenpane">
 <span class="hd">Find Valid Lots</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.Tx.queryLots()</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Certificate ID (CID):</span>
     <br/>
     <input id="lots_CID" class="long tt CIDinp"></input>
@@ -524,16 +562,16 @@
     <br/><br/>
     Quantity: <span class="tt qty" id="lots1_qty"></span>
   </td></tr></table>
-</p>
-<p>
-<div class="brk"></div>
 <br/>
+<br/>
+<br/>
+<div class="brk"></div>
 <br/>
 <span class="hd">Trace a Lot's Provenance</span>
 &nbsp; &nbsp; <span class="med tt">Rarebit.Tx.traceLotProvenance()</span>
-</p>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Transaction hash:</span>
     <br/>
     <input id="lottrace_hash" class="long tt inp"></input>
@@ -551,7 +589,7 @@
     <br/><br/>
     <button class="btngo" onclick="lotTrace();">Trace</button>
     <br/><br/>
-    <span class="hd err" id="lottrace_err">&nbsp;</span>
+    <span class="hd err" id="lottrace_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -568,14 +606,14 @@
     <br/><br/>
     Quantity: <span class="tt qty" id="lottrace_qty"></span>
   </td></tr></table>
-</p>
 </div>
 
 
 <div id="utilpane" class="hiddenpane">
 <span class="hd">Generate Bitcoin Key/Address Pair</span>
-<p>
-  <table><tr><td>
+  <br/>
+  <br/>
+  <table><tr><td class="form">
     <span class="med">Private key or brainwallet passphrase:</span>
     <br/>
     <textarea id="gen_key" class="keyinp"></textarea>
@@ -584,8 +622,7 @@
                Generate from entry</button>
     <button class="btngo" onclick="genKey();">Random</button>
     <br/><br/>
-    <span class="hd err" id="gen_err"></span>
-    <br/><br/>
+    <br/>
     <b>Mine vanity address</b>
     <br/><br/>
     <span class="med">Address substring:</span>
@@ -602,11 +639,6 @@
     <br/><br/>
     <button class="btngo" onclick="genMine();" id="gen_mine">Mine</button>
     <br/><br/>
-    <span class="small"><i>Matches address '1substring...' 
-          (any one of the entries).
-    Generates random keypairs until match found.  
-    Long substrings may take many human lifetimes to find.
-    </i></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -616,9 +648,20 @@
     <br/><br/>
     Address: <span class="tt author" id="gen_addr"></span>
     <br/><br/>
+    <span class="small">Private key:</span>
+    <br/>
     <span class="small" id="gen_priv"></span>
+    <br/><br/>
+    <br/><br/>
+    <span class="hd err" id="gen_err"></span>
+    <br/><br/>
+    <br/><br/>
+    <span class="small"><i>Miner matches address '1substring...' 
+          (any one of the entries).
+    Generates random keypairs until match found.  
+    Long substrings may take many human lifetimes to find.
+    </i></span>
   </td></tr></table>
-</p>
 </div>
 
 
