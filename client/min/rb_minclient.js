@@ -521,7 +521,7 @@ function genKey( key ) {
 function genSetup( keyinfo, err ) {
   setel( "gen_key", keyinfo.pass ? keyinfo.pass : keyinfo.privateStr );
   setel( "gen_addr", keyinfo.addressStr );
-  setel( "gen_priv", "Private key: " +  keyinfo.privateStr );
+  setel( "gen_priv", keyinfo.privateStr );
   setel( "gen_pub", keyinfo.pubHex );
   setel( "gen_err", err?err:"" );
 }
