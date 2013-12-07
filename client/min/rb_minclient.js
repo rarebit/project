@@ -52,9 +52,19 @@ function setel( id, v ) {
     else
       e.innerHTML = v;
 }
+function setelcls( id, c ) {
+  document.getElementById(id).className = c;
+}
 function setelin( id, v ) {
   if (!getel( id ))
     setel( id, v );
+}
+function toggle( tog, maxtogs, sel, selcls ) {
+  for( var n=0,c; n<maxtogs; n++ ) {
+    c = document.getElementById(tog+n).className;
+    c = c.replace( " "+selcls, "" );
+    setelcls( tog+n, n==sel ? c+" "+selcls : c );
+  }
 }
 function selectPane( pane ) {
   var btns = ['certbtn','seedbtn','issuebtn','transferbtn',
@@ -63,11 +73,11 @@ function selectPane( pane ) {
                'provenancepane','utilpane','intropane'];
   for( var n=0; n<panes.length; n++ )
     if (panes[n] == pane)
-      document.getElementById(btns[n]).className = "toggledpanebtn",
-      document.getElementById(pane).className = "visiblepane";
+      setelcls( btns[n], "toggledpanebtn" ),
+      setelcls( pane , "visiblepane" );
     else
-      document.getElementById(btns[n]).className = "panebtn",
-      document.getElementById(panes[n]).className = "hiddenpane";
+      setelcls( btns[n], "panebtn" ),
+      setelcls( panes[n], "hiddenpane" );
 }
 
 
