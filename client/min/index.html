@@ -12,15 +12,19 @@
   <style>
     body {
       margin:2em 3em; color:#404040; background-color:#ffffff;
-      font-family:"Arial", sans-serif; font-size:100%; font-stretch:expanded;
+      font-family:"Arial", sans-serif; font-stretch:expanded;
     }
+    .body5 {font-size:120%;}
+    .body4 {font-size:110%;}
+    .body3 {font-size:100%;}
+    .body2 {font-size:90%;}
+    .body1 {font-size:80%;}
     table, td {
       border:0; margin:0; padding:0; border-spacing:0; 
       text-align:left; vertical-align:top;
     }
     table {width:100%;}
     .tb {vertical-align:bottom;}
-    .tc {vertical-align:middle;}
     .tright {text-align:right;}
     td {width:47%;}
     textarea {
@@ -45,13 +49,20 @@
       background-image:-webkit-linear-gradient(top,#e0f0e0,#e0f0e0);
     }
     .panebtn, .toggledpanebtn {font-size:110%; border-radius:1px;}
-    .panebtn {border-color:#d0d0d0;}
+    .panebtn {border-color:#d8d8d8;}
     .toggledpanebtn {background-color:white;}
+    .ptr {cursor:pointer;}
     .form {
-      padding:0.2em 0.6em; background-color:#f8f8f8;
+      padding:0.6em 0.8em; background-color:#f6f6f6;
       border:1px dotted gray; box-shadow:3px 3px 3px #888888;
     }
+    .faq {
+      padding:0.6em 0.8em; background-color:#f8f8d8; 
+      border:1px dashed #d8d8d8;
+    }
     .sep {width:8%;}
+    .minsep {width:1%;}
+    .sep25 {width:20%;}
     .brk {display:block; border-top:1px dashed gray;}
     .gap {display:block; font-size:0.2em;}
     .hiddenpane {display:none;}
@@ -60,11 +71,16 @@
     .title {font-size:140%; font-weight:500;}
     .hd {font-size:120%; font-weight:600;}
     .tt {font-family:"courier new","lucida console",monospace;}
-    .b {color:#606060; font-weight:600;}
-    .small {font-size:73%;}
-    .med {font-size:85%;}
+    .b {font-weight:600;}
+    .small {font-size:75%;}
+    .med {font-size:93%;}
     .oneline {display:inline-block; white-space:nowrap;}
+    .inline {display:inline-block;}
+    .lt {opacity:0.75;}
+    .on {color:#00ff00;}
     .right {float:right;}
+    .center {margin:0 auto; display:inline-block;}
+    .tcenter {text-align:center;}
     .JSON {height:8em; font-size:90%;}
     .JSONtx {height:20em; font-size:90%; border:1px solid #d0d0d0;}
     .readonly {background-color:#f0f0f0; border:1px solid #d0d0d0;}
@@ -91,13 +107,31 @@
   <script src="rb_minclient.js"></script>
 </head>
 
-<body onload="pgload()">
+<body onload="pgload()" class="body3" id="body">
 
 
 <table><tr><td style="width:100%;">
+
 <span class="title">Rarebit Min Client</span> 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 <span class="med"></span>
+<div class="inline right">
+<div class="inline body1 lt ptr" id="scale0"
+     onclick="setelcls('body','body1');toggle('scale',5,0,'on');"
+     title="scale: 80%">A</div> &nbsp;
+<div class="inline body2 lt ptr" id="scale1"
+     onclick="setelcls('body','body2');toggle('scale',5,1,'on');"
+     title="scale: 90%">A</div> &nbsp;
+<div class="inline body3 ptr lt on" id="scale2"
+     onclick="setelcls('body','body3');toggle('scale',5,2,'on');"
+     title="scale: 100%">A</div> &nbsp;
+<div class="inline body4 lt ptr" id="scale3"
+     onclick="setelcls('body','body4');toggle('scale',5,3,'on');"
+     title="scale: 110%">A</div> &nbsp;
+<div class="inline body5 lt ptr" id="scale4"
+     onclick="setelcls('body','body5');toggle('scale',5,4,'on');"
+     title="scale: 120%">A</div>
+</div>
 
 <br/>
 <br/>
@@ -133,7 +167,9 @@
 <br/>
 <div class="right">
 </div>
+
 </td></tr></table>
+
 
 <div class="gap">&nbsp;</div>
 <div class="brk"></div>
@@ -143,60 +179,79 @@
 
 <div id="intropane" class="visiblepane">
 <br/>
-  <table><tr><td style="width:70%;">
+  <table><tr>
+  <td class="sep25">
+    <div class="faq small">
+      The Rarebit protocol is designed to enable 
+      collectible digital works to be issued and traded 
+      on the bitcoin network.
+      <br/>
+      <br/>
+      Using this client,
+      an artist or author 
+      can issue digitally signed limited editions of a work online,
+      and collectors can trade units of the edition 
+      with the assurance they are authentic.
+      <br/>
+      <br/>
+      <br/>
+      <div class="">
+        <a href="../../doc/rbprimer.html" target=_blank class="oneline"
+             title="The purpose of the Rarebit protocol and how it works">
+                          <b>Overview and specification</b></a>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="">
+      &nbsp; &nbsp; <a href="../../index.html" target=_blank
+         title="Rarebit project"><img src="http://imageshack.com/a/img547/203/zkxe.png"/></a>
+      &nbsp;
+    </div>
+  </td>
+  <td class="sep"></td>
+  <td class="med">
     This is a baseline reference client 
     for the Rarebit
     protocol and javascript library.
+    It runs in the browser as a local process.
     <br/>
     <br/>
-    The Rarebit protocol is designed to enable 
-    collectible digital works to be issued and traded 
-    on the bitcoin network.
-    Using this client,
-    an artist or author 
-    can issue digitally signed limited editions of a work online,
-    and collectors can trade units of the edition 
-    with the assurance they are authentic.
-    <br/>
-    <br/>
-    This client runs locally
-    in the browser.
     Development and testing was performed on recent releases of 
-    the Firefox and Chrome desktop browsers.  Since Chrome compiles
-    javascript, crypto will run much faster in Chrome than in Firefox
-    (refer to Mozilla's website for announcements about 
-    their upcoming compiler).
+    Firefox and Chrome (desktop versions).  The latest
+    release of Firefox is recommended because it includes a 
+    new fast javascript compiler.
     <br/>
     <br/>
     <br/>
-    <div class="brk"></div>
-    <br/>
-    <span class="b">Author</span>:
+    <span class="b">Author:</span>
     Used to sign a work.  Creates a certificate to 
     accompany the work, and generates a bitcoin address 
     to uniquely refer to the signed work (a certificate ID, or CID).
     <br/>
     <br/>
-    <span class="b">Issue</span>:  
+    <span class="b">Issue:</span>
     Used to issue editions of a signed work.
     Creates bitcoin transactions that record the 
     CID and quantity.
     <br/>
     <br/>
-    <span class="b">Transfer</span>: 
+    <span class="b">Transfer:</span>
     Used to transfer units of an edition to new owners.
     <br/>
-    &nbsp;&nbsp;<span class="small">1.</span>  
+    &nbsp;&nbsp;<span class="b small">1.</span>  
     Creates bitcoin transactions in which the author
     signs over units to new owners.
     <br/>
-    &nbsp;&nbsp;<span class="small">2.</span>  
+    &nbsp;&nbsp;<span class="b small">2.</span>  
     Creates transactions in which current owners
     sign over units to new owners.
     <br/>
-    <br/>
-    <br/>
-    <div class="brk"></div>
     <br/>
     Signing a work will setup the Issue section, and
     issuing an edition will setup the Transfer section.
@@ -211,15 +266,12 @@
     that can be broadcast to the bitcoin network.
     Transactions should be carefully scrutinized 
     before broadcasting them.
-  </td><td class="tright">
-    <a href="../../index.html" target=_blank 
-       title="Rarebit project"><img src="http://imageshack.com/a/img547/203/zkxe.png"/></a>
-    <br/>
-    <br/>
-    <a href="../../doc/rbprimer.html" target=_blank
-         title="The purpose of the Rarebit protocol and how it works">
-                        Protocol Overview</a>
-  </td></tr></table>
+  </td>
+  <td class="minsep"></td>
+  <td class="minsep"></td>
+  <td class="minsep"></td>
+  <td class="minsep"></td>
+  </tr></table>
 </div>
 
 
@@ -235,6 +287,7 @@
     <br/>
     <textarea class="textinp" id="cert_statement"></textarea>
     <br/>
+    <br/>
     <span class="med">Author's private key 
                       or brainwallet passphrase:</span>
     <br/>
@@ -242,7 +295,8 @@
     <br/><br/>
     <button class="btngo" onclick="certCreate();">
               Sign and create certificate</button>
-    <br/><br/>
+    <br/>
+    <br/>
     <span class="hd err" id="cert_err"></span>
   </td>
   <td class="sep"></td>
@@ -407,7 +461,6 @@
     <button class="btngo" onclick="origtxCreate();">
                      Create transaction</button>
     <br/><br/>
-    <span class="hd err" id="origtx_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -428,6 +481,8 @@
     CID: <span class="tt CID" id="origtx_CID">&nbsp;</span>
     <br/><br/>
     Author: <span class="tt author" id="origtx_issuer"></span>
+    <br/><br/>
+    <span class="hd err" id="origtx_err"></span>
   </td></tr></table>
 </div>
 
@@ -494,7 +549,6 @@
     <button class="btngo" onclick="xfertxCreate();">
                     Create transaction</button>
     <br/><br/>
-    <span class="hd err" id="xfertx_err"></span>
   </td>
   <td class="sep"></td>
   <td>
@@ -515,6 +569,8 @@
     CID: <span class="tt CID" id="xfertx_CID">&nbsp;</span>
     <br/><br/>
     Author: <span class="tt author" id="xfertx_issuer">&nbsp;</span>
+    <br/><br/>
+    <span class="hd err" id="xfertx_err"></span>
   </td></tr></table>
 </div>
 
@@ -646,7 +702,8 @@
     <br/>
     <textarea readonly class="pubinp readonly" id="gen_pub"></textarea>
     <br/><br/>
-    Address: <span class="tt author" id="gen_addr"></span>
+    <span class="med">Address:</span> 
+     <span class="tt author" id="gen_addr"></span>
     <br/><br/>
     <span class="small">Private key:</span>
     <br/>
@@ -656,8 +713,8 @@
     <span class="hd err" id="gen_err"></span>
     <br/><br/>
     <br/><br/>
-    <span class="small"><i>Miner matches address '1substring...' 
-          (any one of the entries).
+    <span class="small"><i>Miner searches for address </i>'1substring...' 
+          <i>(any one of the entries).
     Generates random keypairs until match found.  
     Long substrings may take many human lifetimes to find.
     </i></span>
