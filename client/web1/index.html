@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Rarebit Client *WEB1* Alpha</title> 
+  <meta content="rarebit client" name="description">
+  <meta content="Rarebit" name="author">
+  <link rel="stylesheet" type="text/css"
+        href="../../lib/css/extern/statetools_blueprint.css">
+  <style>
+    #projectimg {border:0;}
+    #cert_img {margin:0 auto; height:100%; padding:0; border:0;}
+    #cert_video {margin:auto 0; width:100%; padding:0; border:0;}
+    #cert_audio, #cert_mediafail {margin:200px auto; padding:0;}
+    #imgwrap {text-align:center; background-color:#ccc;}
+    /*#barmain > .cellgroup > .cell.opacity5 {opacity:0.3;}*/
+    #placard {position:fixed;width:100%;top:auto;bottom:0px;border:0;
+              background-color:rgba(0,0,0,0.3);}
+    #placardtog {position:absolute;right:0px;bottom:20px;border:0;
+                 border:1px solid #aaa; border-right:0; min-width:5px; height:auto;}
+    #placardtog {width:1.5em; text-align:center; padding-top:0.2em;}
+    #placardtog:before {content:'i'; font-size:90%;}
+    #placardtog.tog_toggled {visibility:hidden;}
+    #placardtog.tog:not(.tog_toggled) {visibility:visible;}
+    #placard .close {color:#eee;}
+    #placard .rowsect, #placard .cell { border-color:transparent;}
+    #placard .inplabel { color:rgba(255,255,255,0.8);}
+
+    .fmtline {display:block; margin-bottom:1em; white-space:nowrap;}
+    .lotlist {font-size:95%;}
+    .lotlist .fmtsubline {display:block; margin-bottom:0.2em; font-size:90%;}
+    .lotlist .txhash, .lotlist .int {font-size:85%;}
+    .lotlist.items button {border:1px solid #d9d9d9;}
+    .lotlist.items button:hover {border-color:#aaa;}
+    #seed_lots {font-size:90%;}
+    #seed_availouts .fmtline {margin-bottom:0.3em;}
+
+    .qtysum {margin-top:0.5em;}
+    .qtysum > div {padding-top:0.1em;}
+    .back {background-color:transparent;}
+    .slide.hgtall {}
+    .JSONtx, .raw {height:25em; font-size:75%;}
+    .readonly {background-color:#f0f0f0;}
+    .CIDinp, .autinp, .owninp {min-width:22em;}
+    .keyinp, .pubinp, .textinp, .titleinp, .urlinp {min-width:26em;}
+    .textinp {height:8em;}
+    .pubinp {font-size:90%; height:4em; color:#606060;}
+    .pub {font-size:85%; height:4em; color:#606060;}
+    .priv {font-size:85%; color:#606060;}
+    .keyinp, .err {color:#f06060;}
+    .keyinp {font-size:90%;}
+    .CID, .CIDinp, .qty, .value, .stat {color:#60e060; font-size:110%;}
+    .qty {font-size:105%;}
+    .seedaddr, .err, .stat {font-size:110%;}
+    .name, .nameinp {color:#30c030; font-size:110%;}
+    .name {overflow-x:hidden; text-overflow:ellipsis;}
+    .hash {color:#30c030; font-size:90%; border:0;}
+    .author, .autinp {color:#2050c0; font-size:110%;}
+    .vfix {vertical-align:bottom; margin-bottom:0.35em;}
+    .owner, .owninp {color:#e05050; font-size:110%;}
+    .authorerr {background-color:#303030; color:#ffffff; font-size:110%;}
+    .CIDinp, .autinp, .owninp {font-size:105%;}
+    .tus:after {content:'.'; opacity:0;}
+    .send:hover.send:enabled {background-color:red; color:white;}
+    #placard .popcontent {color:#e4e4e4;}
+    #placard .CID, #placard .name, #placard .author, #placard .seedaddr
+      {font-size:95%;}
+    #placard .CID, #placard .value {color:#8f8;}
+    #placard .value {font-size:95%;}
+    #placard .name {color:#ffa;}
+    #placard .author {color:#bbc2ff;}
+    .smallparts span {font-size:95%;}
+    #back {z-index: 0;}
+    #barmain, #placard {z-index: 1;}
+    #popcontent, #popseed, #popissue, #popxfer, #popsearch, 
+                   #popdoc, #popsandbox {z-index: 2;}
+    #popsend, #popsendx, #popseedhelp, #popseedkey, 
+                   #popcontenthelp, #popsearchhelp, #popsync,
+                   #poppub, #poplottrace {z-index: 3;}
+    #popJSON, #popraw, #popJSONx, #poprawx {z-index: 4;}
+
+    /* TODO: icon font*/
+    .imgissue:before { content: 'I'; }
+    .imgsearch:before { content: 'Q'; }
+    .imgnet:before { content: 'N'; }
+    .imgkey:before { content: 'K'; }
+    .imgrand:before { content: 'R'; }
+    .imgcreate:before { content: 'C'; }
+    .imgsend:before { content: 'S'; }
+    .imgopen:before { content: 'F'; }
+    .imgxfter:before { content: 'T'; }
+    .imgjson:before { content: 'J'; }
+    .imgraw:before { content: '1'; }
+    .imgpop2:before { content: '>'; }
+    .imgpopleft:before { content: '<'; }
+    
+    #popsync .popcontent > span {white-space:normal;}
+  </style>
+  <script src="../../lib/js/extern/ui/transev.js"></script>
+  <script src="../../lib/js/extern/ui/elemstate.js"></script>
+  <script src="../../lib/js/extern/ui/statetools.js"></script>
+  <script src="../../lib/js/extern/bitcoinjs-min.js"></script>
+  <script src="../../lib/js/extern/message.js"></script>
+  <script src="../../lib/js/extern/rfc1751.js"></script>
+  <script src="../../lib/js/extern/mbitcoinjs.js"></script>
+  <script src="../../lib/js/extern/impexp.js"></script>
+  <script src="../../lib/js/rarebit.js"></script>
+  <script src="rb_web1client.js"></script>
+  <script>
+    function okclose( e, ok, id ) {
+      if (ok) {
+        ESM.setParentState( e, 'focused', true );
+        if (id) id2el(id).focus();
+      }
+    }
+    function clickSection( id ) {
+      setTimeout( function(){id2el(id).click();}, 10 );
+    }
+    function onTraceUpdated() {
+      clickSection( 'lots1_btn' );
+    }
+  </script>
+</head>
+
+
+<body onload="ESM.initPage();pgload();">
+
+
+
+<div class="back" id="imgwrap"/>
+  <img src="" id="cert_img" style="display:none;"/>
+  <video src="" id="cert_video" controls autoplay style="display:none;">
+  </video/> <!--  preload="auto" -->
+  <audio src="" id="cert_audio" controls autoplay style="display:none;">
+  </audio>
+  <div id="cert_mediafail" class="f0 tminus1" style="display:none;">
+    Browser unable to play media, content OK
+  </div>
+</div>
+
+
+
+<div id="back" esmcssroot="back_toggled back">
+
+
+<div id="barmain" 
+class="bar barmainlt f0 widall gridview solidsep"><div class="cellgroup">
+
+
+
+    <!-- SPACER 
+    <div class="cell popwrap opacity5">
+          <div class="togcontent togbigsz whitebk widsep">
+            <div class="icon tus"></div>
+          </div>
+    </div>
+     SPACER -->
+
+
+
+<!-- ======= CONTENT SECTION ========= -->
+    <div class="cell popwrap">
+          <button ESMcssroot="togbigsz togwid2 tog" ESMtoggletarget="popcontent"
+                                  ESMdeactivateid="contentclose">
+            <div class="togcontent togbigsz togwid2">
+              <div class="icon imghash"
+                   data-label="content"><span>CONTENT</span></div>
+            </div>
+          </button>
+          <div id="popcontent" 
+               ESMcssRoot="lev1 slidefromleft popwid25 lt undermainbar slide" 
+               ESMfocusid="content_open">
+            <div class="pophead"><div>OPEN CONTENT</div>
+                      <button id="contentclose" class="close"></button>
+                      <button ESMcssroot="help" 
+                              ESMtoggletarget="popcontenthelp" 
+                              ESMdeactivateid="contenthelpclose">
+                      </button>
+            </div>
+            <div class="popcontent">
+
+
+                      <!-- HELP POP -->
+                      <div id="popcontenthelp" ESMfocusid="contenthelp_content"
+                            ESMcssRoot="lev2 slidewid lt undermainbar slide">
+                            <div class="pophead">
+                              <div class="poptitle">ABOUT CONTENT</div>
+                              <button id="contenthelpclose" class="close"></button>
+                            </div>
+                            <div class="popcontent f0 tminus1 scrolly">
+                              <div tabindex=0 id="contenthelp_content">
+<p class="br">
+A file can be selected and loaded into the client.
+</p><p class="br">
+When a file is loaded, the cryptographic hash if its content is
+calculated, which is used as the basis for a Content ID. 
+The Content ID uniquely identifies the content.
+</p><p class="br">
+Any file of any type can be loaded and hashed.  
+Supported media file types (most images and some types of video and audio) 
+will be displayed and/or played 
+in the client background.
+</p><p class="br">
+Digital works which are composed of several files (like web sites),
+can be prepared by combining them into an archive file ('zip', etc).
+    </p><p class="br">
+To open files in Chrome, the browser needs to be run with its 
+<span class="tt">--allow-file-access-from-files</span>
+<a href="http://www.chromium.org/developers/how-tos/run-chromium-with-flags"
+  target=_blank>
+command line option</a> 
+(the switch instructs Chrome to adopt 
+Firefox's policy regarding files - web pages are not given
+access to the local file system).
+</p>
+                              </div>
+                            </div>
+                      </div>
+                      <!-- END HELP -->
+
+
+
+
+              <div class="br10"></div>
+
+              <div class="line br7">
+                <div class="submitborder"><button class="tog" 
+                        id="content_open" onclick="id2el('content_file').click();">
+                  <div class="togcontent">
+                    <div class="icon imgopen" 
+                         data-label="file"><span>open from file</span></div>
+                  </div>
+                </button></div>
+              </div>
+              <input type="file" style="display:none;" 
+                     accept="*" id="content_file"
+                     onchange="contentOpen(this.files[0]);"/>
+              <div class="line br5">
+                <span class="hd err" id="content_err"></span>
+                <span class="hd stat tus" id="content_stat"></span>
+              </div>
+              <div class="line" id="_content_CID">
+                <div class="line br8"><div class="padright2">
+                  <span class="inplabel br0">TYPE</span>
+                  <span class="f1 tus" id="content_type"></span>
+                </div><div>
+                  <span class="inplabel br0">SIZE</span>
+                  <span class="f1 smallparts tus" id="content_size"></span>
+                </div></div>
+                <span class="inplabel br0">NAME</span>
+                <span class="f1 tus br8" id="content_name"></span>
+                <span class="inplabel br0">CONTENT ID</span>
+                <span class="f1 CID tus br8" id="content_CID"></span>
+                <span class="inplabel br0">CONTENT HASH</span>
+                <textarea readonly id="content_hash" 
+                          class="tt widall"></textarea>
+              </div>
+            </div>
+          </div>
+<!-- ========================== END content ============================= -->
+
+
+
+<!-- ========================== BEGIN seed ============================= -->
+    </div><div class="cell popwrap">
+          <!-- SEED TOGGLE -->
+          <button ESMcssroot="togbigsz togwid2 tog" 
+                  ESMtoggletarget="popseed"
+                  ESMdeactivateid="seedclose">
+                <div class="togcontent togwid2 togbigsz">
+                  <div class="icon imgissue"><span>ISSUE/TRANSFER</span></div>
+                </div>
+          </button>
+          <!-- END SEED TOGGLE -->
+          <!-- SEED POP -->
+          <div id="popseed" 
+               ESMcssRoot="lev1 slidefromleft popwid30 lt undermainbar slide" 
+               ESMfocusid="seed_keybtn">
+                <!-- SEED HEAD -->
+                <div class="pophead f0">
+                      <button id="seedclose" class="close"></button>
+                      <button ESMcssroot="help" 
+                              ESMtoggletarget="popseedhelp" 
+                              ESMdeactivateid="seedhelpclose">
+                      </button>
+                      <div class="poptitle">ISSUE/TRANSFER</div>
+                </div>
+                <!-- END SEED HEAD -->
+                <!-- SEED BODY -->
+                <div class="popcontent">
+
+
+                      <!-- HELP POP -->
+                      <div id="popseedhelp" ESMfocusid="seedhelp_content"
+                            ESMcssRoot="lev2 slidewid lt undermainbar slide">
+                            <div class="pophead">
+                              <div class="poptitle">ABOUT ISSUE/TRANSFER</div>
+                              <button id="seedhelpclose" class="close"></button>
+                            </div>
+<!-- ======= HELP BODY ========= -->
+<div class="popcontent f0 tminus1 scroll"><div tabindex=0 id="seedhelp_content">
+<p class="br">
+A normal bitcoin address is used to identify an author or owner.  
+An existing address can be used or a new key/address pair can be generated.
+The key for the address is needed to create transactions.
+</p><p class="br">
+The author/owner address holds content collections, 
+i.e., issued editions and aquired lots.
+</p><p class="br">
+Open content is needed to issue editions or transfer lots.
+An edition is issued by creating a transaction that sends a number of units
+of the content to the author's address 
+(the author is then the owner of the lot).
+An issue transaction, once sent and confirmed,
+serves as a timestamped certificate of authenticity
+(it holds the author's signature).
+</p><p class="br">
+Lots are transferred by
+creating a transaction that sends units from the current owner 
+to new owner(s).
+</p><p class="br">
+Before transactions can be created, the author/owner address needs to be seeded 
+with sufficient funds
+to pay the fees required by the bitcoin network (change 
+is returned to the same address).  The amount of the seed should
+also be sufficient to insure transactions meet 
+the network's minimum value requirements.
+Additional seed funding can be added at any time.
+</p>
+</div></div>
+<!-- ======= END HELP BODY ========= -->
+                      </div>
+                      <!-- END HELP POP -->
+
+
+              <div class="br"></div>
+              <div class="b tminus2 br">AUTHOR/OWNER IDENTITY</div>
+
+              <!-- SEED KEY SECTION -->
+              <div class="line widmin40 br15">
+                <div class="f1 tplus1 margright0 vfix" id="seed_addr">
+                  <span class="cursor f1 tminus2"
+                        onclick="clickSection('seed_keybtn')">
+                                  [specify/create key]</span>
+                </div>
+                <div class="submitborder right"><div class="popwrap left">
+                      <button ESMcssroot="tog" 
+                              ESMtoggletarget="popseedkey"
+                              ESMdeactivateid="seedkeyclose" id="seed_keybtn">
+                            <div class="togcontent">
+                              <div class="icon imgpop2 nolabel"></div>
+                            </div>
+                      </button>
+                  <div id="popseedkey"
+                           ESMcssRoot="popnosuggest lev2 popwid25 popdown" 
+                           ESMfocusid="gen_key">
+                        <div class="pophead f0">
+                              <button id="seedkeyclose" class="close"></button>
+                              <div class="poptitle">PROVE AUTHOR/OWNER IDENTITY</div>
+                        </div>
+                        <div class="popcontent">
+                              <span class="inplabel">PRIVATE KEY OR PASSPHRASE</span>
+                              <textarea class="inp keyinp br3" id="gen_key"></textarea>
+                              <div class="line br4">
+                                <button id="gen_verifykey" class="submit"
+                                        onclick="seedOpen();">
+                                      <div class="icon imgkey"><span>verify 
+                                                         entry</span></div>
+                                </button>
+                                <button id="gen_randomkey" class="submit"
+                                      onclick="seedOpen(true);">
+                                      <div class="icon imgrand">
+                                                 <span>new random</span></div>
+                                </button>
+                              </div>
+                              <span class="hd err tus br4" id="gen_err"></span>
+                              <div id="_gen_addr">
+                                <div class="f1 tplus1 br4" id="gen_addr"></div>
+                                <div id="_gen_testnetaddr">
+                                  <span class="inplabel">ADDRESS IN TESTNET</span>
+                                  <div class="f1 tplus1 br4" 
+                                            id="gen_testnetaddr"></div>
+                                </div>
+                                <span class="inplabel">BITCOIN PRIVATE KEY</span>
+                                <span class="f1 priv tus br4" id="gen_priv"></span>
+                                <span class="inplabel">FULL PUBLIC KEY</span>
+                                <textarea class="pub tus br" id="gen_pub"
+                                          readonly></textarea>
+                              </div>
+                        </div>
+                  </div>
+                </div></div>
+              </div>
+              <!-- END KEY SECTION -->
+
+
+              <!-- ACCOUNT SECTION -->
+              <div id="_seed_avail" class="line widall">
+
+                    <!-- SEED VALUE SECTION -->
+                    <div class="line br10 table widall">
+                          <div class="padright2 tablecell top">
+                            <span class="inplabel br0">SEED</span>
+                            <span class="f1 CID" id="seed_avail">1.00</span>
+                          </div>
+                          <div id="_c_seed_availouts" 
+                               class="padleft2 gridviewcellborderleft 
+                                      top tablecell right"><div class="left">
+                            <div class="items f1 tminus4" id="seed_availouts"></div>
+                          </div></div>
+                          <div class="padleft2 top tablecell">
+<!--
+                            <button id="seed_sync" class="submit"
+                                    onclick="seedSync();">
+                              <div class="icon imgnet"><span>sync</span></div>
+                            </button>
+-->
+
+
+                          </div>
+                    </div>
+                    <!-- END SEED VALUE SECTION -->
+
+                    <!-- FEE INPUT -->
+                    <span class="inplabel">FEE TO ADD TO EACH NEW TRANSACTION</span>
+                    <input type="text" id="seed_fee" value="0.00001" 
+                           class="inp feeinp br20"/>
+                    <!-- END FEE INPUT -->
+
+
+
+    <!-- ISSUE/TRANSFER SECTION -->
+              <div id="_x_seed_CID" class="tminus2 b">
+                           Open content needed to issue or transfer</div>
+    <div id="_seed_CID">
+
+                  <div class="tminus2 b br">LOADED CONTENT</div>
+
+    <!-- ISSUE SECTION -->
+    <div class="line widmin40 br3">
+                <div class="margright0 vfix">
+                  <div class="f1 CID" id="seed_CID"></div>
+                </div>
+
+    <div id="_seed_issuer">
+              <div class="inplabel">AUTHOR (only author can issue)</div>
+              <div id="seed_issuer" class="f1 author br"></div>
+    </div>
+
+    <!-- ISSUE POP -->
+    <div class="submitborder right" id="_xi_seed_issuer"><div class="popwrap left">
+          <button ESMcssroot="tog" ESMtoggletarget="popissue"
+                  ESMdeactivateid="issueclose" id="seed_issuebtn">
+                <div class="togcontent">
+                  <div class="icon imgpop2 nolabel"></div>
+                </div>
+          </button>
+          <div id="popissue" 
+               ESMcssRoot="lev2 popwid25 popup"
+               ESMfocusid="origtx_qty">
+            <div class="pophead"><div>ISSUE EDITION</div>
+                  <button id="issueclose" class="close"></button>
+            </div>
+
+<!-- ======= ISSUE POP BODY ========= -->
+            <div class="popcontent">
+              <span class="inplabel br0">QUANTITY TO ISSUE</span>
+              <input type="text" id="origtx_qty" value="10" 
+                     class="inp qtyinp br15"/>
+
+              <span class="inplabel">NEW TRANSACTION</span>
+              <div class="line br4">
+
+                <!-- CREATE TX -->
+                <div class="submitborder">
+                  <button class="tog submitacts important" onclick="origtxCreate();">
+                    <div class="togcontent">
+                      <div class="icon imgcreate" 
+                               data-label="create"><span>create</span></div>
+                    </div>
+                  </button>
+                </div>
+                <!-- END CREATE -->
+
+                <!-- FINALIZE POP -->
+                <div class="submitborder" 
+                     id="_i_origtx_txhash"><div class="popwrap">
+                  <button ESMcssroot="tog" 
+                          ESMtoggletarget="popsend"
+                          ESMdeactivateid="signclose" id="origtx_sendbtn">
+                    <div class="togcontent">
+                      <div class="icon imgpop2"
+                           data-label="issue"><span>verify/send</span></div>
+                    </div>
+                  </button>
+                  <div id="popsend"
+                       ESMcssRoot="lev3 popwid25 popnosuggest popup" 
+                       ESMfocusid="origtx_txhash">
+                    <div class="pophead f0">
+                      <button id="signclose" class="close"></button>
+                      <div class="poptitle">VERIFY AND SEND TRANSACTION</div>
+                    </div>
+                    <div class="popcontent">
+                      <div class="br" id="origtx_qtys"></div>
+                      <span class="inplabel br0">TRANSACTION ID</span>
+                      <textarea readonly id="origtx_txhash" 
+                                   class="f1 tplus1 br5 widall"></textarea>
+                      <div class="line br5">
+                        <button id="origtx_send" class="submit critical"
+                                onclick="origtxSend();">
+                          <div class="icon imgsend"
+                                 data-label="issue"><span class="nowrap" 
+                                             id="origtx_sendlabel">send this
+                                       transaction (IRREVERSIBLE!)</span></div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- SEND BOTTOM BAR -->
+                    <div class="bar togsz gridview gridviewrowattachtobottom widall">
+                      <div class="row">
+                        <div class="cell popwrap">
+                          <div class="togcontent wid4">
+                            <div class="icon tus"></div>
+                          </div>
+                        <!-- JSON POP -->
+                        </div><div class="cell popwrap">
+                          <button ESMcssroot="togwid tog" 
+                                  ESMtoggletarget="popJSON" 
+                                  ESMdeactivateid="JSONclose">
+                            <div class="togcontent togwid">
+                              <div class="icon imgjson" 
+                                   data-label="JSON"><span>JSON</span></div>
+                            </div>
+                          </button>
+                          <div id="popJSON" ESMfocusid="origtx_JSON"
+                               ESMcssRoot="lev4 slidewid2 lt hgtall slide">
+                            <div class="pophead">
+                              <div class="poptitle">JSON TRANSACTION</div>
+                              <button id="JSONclose" class="close"></button>
+                            </div>
+                            <div class="popcontent scroll">
+                              <div class="pre f1 tminus4" 
+                                   tabindex=0 id="origtx_JSON"></div>
+                            </div>
+                          </div>
+                        <!-- END JSON SUBPOP -->
+                        <!-- RAW SUBPOP -->
+                        </div><div class="cell popwrap gridviewcellborderright">
+                          <button ESMcssroot="togwid tog" 
+                                  ESMtoggletarget="popraw" ESMdeactivateid="rawclose">
+                            <div class="togcontent togwid">
+                              <div class="icon imgraw" 
+                                   data-label="raw"><span>raw</span></div>
+                            </div>
+                          </button>
+                          <div id="popraw" ESMfocusid="origtx_raw"
+                                   ESMcssRoot="lev4 slidewid lt hgtall slide">
+                            <div class="pophead">
+                              <div class="poptitle">RAW TRANSACTION</div>
+                              <button id="rawclose" class="close"></button>
+                            </div>
+                            <div class="popcontent">
+                              <textarea class="f1 raw" readonly tabindex=0 
+                                        id="origtx_raw"></textarea>
+                            </div>
+                          </div>
+                        <!-- END RAW SUBPOP -->
+                        <!-- SPACER --> 
+                        </div><div class="cell popwrap">
+                          <div class="togcontent widsep">
+                            <div class="icon tus"></div>
+                          </div>
+                        </div>
+                        <!-- END SPACER -->
+                      </div>
+                    </div>
+                    <!-- END SEND BOTTOM BAR -->
+
+                  </div>
+                </div></div>
+                <!-- END FINALIZE POP -->
+
+              </div>
+
+              <span class="hd err tus" id="origtx_err"></span>
+            </div>
+<!-- ======= END ISSUE POP BODY ========= -->
+
+          </div>
+    </div></div>
+    <!-- END ISSUE POP -->
+
+    </div>
+    <!-- END ISSUE SECTION -->
+
+
+    <!-- XFER SECTION -->
+    <div id="_seed_lots">
+
+    <div class="line widall br15">
+          <div class="margright0">
+                <div class="margright0 vfix">
+                      <span class="inplabel"> &nbsp; &nbsp; </span>
+                      <span id="seed_lots" class="f1 qty"></span>
+                      <span class="inplabel"> UNITS OWNED</span>
+                </div>
+<!--
+                <div class="submitborder">
+                  <button class="tog togwid submitacts" 
+                    onclick="if(xfertxShowOwnedLots())clickSection('lots_mainbtn');">
+                        <div class="togcontent togwid">
+                          <div class="icon imgshow"><span>show lots</span></div>
+                        </div>
+                  </button>
+                </div>
+-->
+
+    <!-- XFER POP -->
+    <div class="submitborder"><div class="popwrap left">
+          <button ESMcssroot="togwid tog" ESMtoggletarget="popxfer"
+                                   ESMdeactivateid="xferclose">
+                <div class="togcontent togwid">
+                  <div class="icon imgpop2"><span>transfer</span></div>
+                </div>
+          </button>
+          <div id="popxfer" 
+               ESMfocusid="xfertx_pub"
+               ESMcssRoot="poprightup popwid25 lev2 popright">
+            <div class="pophead">
+                  <div>TRANSFER</div>
+                  <button id="xferclose" class="close"></button>
+            </div>
+
+<!-- ======= XFER POP BODY ========= -->
+<div class="popcontent">
+
+              <!-- NEW OWNERS SECTION -->
+              <div class="line widmin40 br10">
+                <span class="br b tminus2">NEW OWNERS</span>
+                <div id="xfertx_newowners" class="items br"></div>
+                <!-- NEW OWNER PUB POP -->
+
+<!--
+                <div class="submitborder"><div class="popwrap">
+                  <button ESMcssroot="togwid tog" 
+                          ESMtoggletarget="poppub"
+                          ESMdeactivateid="pubclose" id="xfertx_pubbtn">
+                    <div class="togcontent togwid">
+                      <div class="icon imgplus"><span>add</span></div>
+                    </div>
+                  </button>
+                  <div id="poppub"
+                       ESMcssRoot="lev3 popwid25 popright" 
+                       ESMfocusid="xfertx_pub">
+                    <div class="pophead f0">
+                      <button id="pubclose" class="close"></button>
+                      <div class="poptitle">ADD NEW OWNER</div>
+                    </div>
+                    <div class="popcontent">
+
+-->
+                      <span class="inplabel">NEW OWNER'S PUBLIC KEY</span>
+                      <textarea class="inp pubinp br7" id="xfertx_pub"></textarea>
+                      <span class="inplabel br0">QUANTITY TO 
+                                             SEND TO THIS NEW OWNER</span>
+                      <input type="int" id="xfertx_qty" class="inp qtyinp br7"/>
+                      <div class="line br3">
+                        <button id="xfertx_add" class="submit"
+                                onclick="xfertxNewOwnerAdd();">
+                          <div class="icon imgplus"><span>add</span></div>
+                        </button>
+                        <button id="xfertx_addavail" class="submit"
+                                onclick="xfertxNewOwnerAdd(true);">
+                          <div class="icon imgplus"><span>add 
+                                                  available</span></div>
+                        </button>
+                        <button id="xfertx_clear" class="submit"
+                                onclick="xfertxSetup();">
+                          <div class="icon imgdel"><span>clear</span></div>
+                        </button>
+                      </div>
+
+<!--
+                      <span class="hd err" id="xfertx_puberr"></span>
+                    </div>
+                  </div>
+                </div></div>
+
+                -- END PUB POP --
+                <div class="submitborder">
+                  <button class="tog submitacts" id="xfertx_clear"
+                          onclick="xfertxSetup();">
+                    <div class="togcontent">
+                      <div class="icon imgdel"><span>clear</span></div>
+                    </div>
+                  </button>
+                </div>
+-->
+
+
+              </div>
+              <!-- END NEW OWNERS SECTION -->
+
+
+              <span class="inplabel">NEW TRANSACTION</span>
+              <div class="line br4">
+
+                <!-- CREATE TX -->
+                <div class="submitborder">
+                  <button class="tog submitacts important" onclick="xfertxCreate();">
+                    <div class="togcontent">
+                      <div class="icon imgcreate" 
+                               data-label="create"><span>create</span></div>
+                    </div>
+                  </button>
+                </div>
+                <!-- END CREATE -->
+
+                <!-- FINALIZE POP -->
+                <div class="submitborder" id="_i_xfertx_txhash"><div class="popwrap">
+                  <button ESMcssroot="tog" 
+                          ESMtoggletarget="popsendx"
+                          ESMdeactivateid="signclosex" id="xfertx_sendbtn">
+                    <div class="togcontent">
+                      <div class="icon imgpop2"
+                           data-label="xfer"><span>verify/send</span></div>
+                    </div>
+                  </button>
+                  <div id="popsendx"
+                       ESMcssRoot="lev3 popwid25 popnosuggest popup" 
+                       ESMfocusid="xfertx_txhash">
+                    <div class="pophead f0">
+                      <button id="signclosex" class="close"></button>
+                      <div class="poptitle">VERIFY AND SEND TRANSACTION</div>
+                    </div>
+                    <div class="popcontent">
+                      <div class="br" id="xfertx_qtys"></div>
+                      <span class="inplabel br0">TRANSACTION ID</span>
+                      <textarea readonly id="xfertx_txhash" 
+                                   class="f1 tplus1 br5 widall"></textarea>
+                      <div class="line br5">
+                        <button id="xfertx_send" class="submit critical"
+                                onclick="xfertxSend();">
+                          <div class="icon imgsend"
+                                 data-label="xfer"><span class="nowrap" 
+                                             id="xfertx_sendlabel">send this
+                                       transaction (IRREVERSIBLE!)</span></div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- SEND BOTTOM BAR -->
+                    <div class="bar togsz gridview gridviewrowattachtobottom widall">
+                      <div class="row">
+                        <div class="cell popwrap">
+                          <div class="togcontent wid4">
+                            <div class="icon tus"></div>
+                          </div>
+                        <!-- JSON POP -->
+                        </div><div class="cell popwrap">
+                          <button ESMcssroot="togwid tog" 
+                                  ESMtoggletarget="popJSONx" 
+                                  ESMdeactivateid="JSONclosex">
+                            <div class="togcontent togwid">
+                              <div class="icon imgjson" 
+                                   data-label="JSON"><span>JSON</span></div>
+                            </div>
+                          </button>
+                          <div id="popJSONx" ESMfocusid="xfertx_JSON"
+                               ESMcssRoot="lev4 slidewid2 lt hgtall slide">
+                            <div class="pophead">
+                              <div class="poptitle">JSON TRANSACTION</div>
+                              <button id="JSONclosex" class="close"></button>
+                            </div>
+                            <div class="popcontent scroll">
+                              <div class="pre f1 tminus4" tabindex=0 
+                                   id="xfertx_JSON"></div>
+                            </div>
+                          </div>
+                        <!-- END JSON SUBPOP -->
+                        <!-- RAW SUBPOP -->
+                        </div><div class="cell popwrap gridviewcellborderright">
+                          <button ESMcssroot="togwid tog" 
+                                  ESMtoggletarget="poprawx" 
+                                  ESMdeactivateid="rawclosex">
+                            <div class="togcontent togwid">
+                              <div class="icon imgraw" 
+                                   data-label="rawx"><span>raw</span></div>
+                            </div>
+                          </button>
+                          <div id="poprawx" ESMfocusid="xfertx_raw"
+                                   ESMcssRoot="lev4 slidewid lt hgtall slide">
+                            <div class="pophead">
+                              <div class="poptitle">RAW TRANSACTION</div>
+                              <button id="rawclosex" class="close"></button>
+                            </div>
+                            <div class="popcontent">
+                              <textarea class="f1 raw" readonly tabindex=0 
+                                        id="xfertx_raw"></textarea>
+                            </div>
+                          </div>
+                        <!-- END RAW SUBPOP -->
+                        <!-- SPACER --> 
+                        </div><div class="cell popwrap">
+                          <div class="togcontent widsep">
+                            <div class="icon tus"></div>
+                          </div>
+                        </div>
+                        <!-- END SPACER -->
+                      </div>
+                    </div>
+                    <!-- END SEND BOTTOM BAR -->
+
+                  </div>
+                </div></div>
+                <!-- END FINALIZE POP -->
+
+              </div>
+
+              <span class="hd err tus" id="xfertx_err"></span>
+</div>
+<!-- ========= END XFER POP BODY ========= -->
+          </div>
+    </div></div>
+    <!-- END XFER POP -->
+
+    </div>
+    </div>
+    </div>
+    <!-- END XFER SECTION -->
+
+
+    </div>
+    <!-- END ISSUE/TRANSFER SECTION -->
+
+                    </div>
+                    <!-- END ACCOUNT SECTION -->
+
+                <!-- END SEED BODY -->
+                </div>
+
+
+          <!-- END SEED POP -->
+          </div>
+
+<!-- ========================== END seed ============================= -->
+
+
+
+</div></div><div class="cellgroup floatright">
+
+
+
+
+<!-- ========================== BEGIN search ============================= -->
+    <div class="cell popwrap">
+          <button ESMcssroot="togbigsz togwid2 tog" ESMtoggletarget="popsearch"
+                  ESMdeactivateid="searchclose" id="lots_mainbtn">
+            <div class="togcontent togbigsz togwid2">
+              <div class="icon imgsearch"
+                   data-label="search"><span>SEARCH</span></div>
+            </div>
+          </button>
+          <div id="popsearch" 
+               ESMfocusid="lots_CID"
+               ESMcssRoot="lev1 slidefromright popwid30 lt undermainbar slide">
+
+            <div class="pophead"><div>FIND LOTS</div>
+                      <button id="searchclose" class="close"></button>
+                      <button ESMcssroot="help" 
+                              ESMtoggletarget="popsearchhelp" 
+                              ESMdeactivateid="searchhelpclose">
+            </div>
+            <div class="popcontent scroll">
+
+                      <!-- HELP POP -->
+                      <div id="popsearchhelp" ESMfocusid="searchhelp_content"
+                            ESMcssRoot="lev2 slidewid lt undermainbar 
+                                        slidefromleft slide">
+                            <div class="pophead">
+                              <div class="poptitle">ABOUT SEARCH</div>
+                              <button id="searchhelpclose" class="close"></button>
+                            </div>
+                            <div class="popcontent f0 tminus1 scrolly">
+                              <div tabindex=0 id="searchhelp_content">
+<p class="br">
+Units of content and ownership histories can be retrieved 
+by entering the Content ID.
+</p><p class="br">
+A collection, i.e., lots held by a collector, can be retrieved 
+by entering the owner's address.
+</p><p class="br">
+An oeuvre, i.e., editions issued by an author, can be retrieved 
+by entering the author's address.
+</p>
+                              </div>
+                            </div>
+                      </div>
+                      <!-- END HELP -->
+
+              <div class="br5"></div>
+
+              <span class="inplabel br0">CONTENT ID</span>
+              <input id="lots_CID" class="inp CIDinp br7"/>
+
+              <span class="inplabel br0">AUTHOR</span>
+              <input id="lots_issuer" class="inp autinp br7"/>
+
+              <span class="inplabel br0">OWNER</span>
+              <input id="lots_owner" class="inp owninp br7"/>
+
+              <button class="submit br4" onclick="lotsFind();">
+                <div class="icon imgsearch"><span>find</span></div>
+              </button>
+
+              <span class="hd err tus br3" id="lots_err"></span>
+
+              <div id="lots_valid" class="lotlist items br5"></div>
+              <div id="lots_invalid" class="lotlist items br10"></div>
+
+
+
+                        <!-- TRACE POP -->
+                        <div class="popwrap">
+                          <button style="display:none;" 
+                                  ESMcssroot="togwid tog" 
+                                  ESMtoggletarget="poplottrace" id="lots1_btn"
+                                  ESMdeactivateid="lottraceclose">
+                            <div class="togcontent togwid">
+                              <div class="icon imgand"><span>trace</span></div>
+                            </div>
+                          </button>
+                          <div id="poplottrace" ESMfocusid="lots1_graph"
+                               ESMcssRoot="lev2 lt popwid20 
+                                           hgtall slidefromleft slide">
+                            <div class="pophead">
+                              <div class="poptitle">LOT TRACE REPORT</div>
+                              <button id="lottraceclose" class="close"></button>
+                            </div>
+                            <div class="popcontent scroll">
+                              <div class="tminus2" tabindex=0 
+                                   id="lots1_graph"></div>
+                            </div>
+                          </div>
+                        <!-- END TRACE POP -->
+
+              </div>
+
+
+            </div>
+          </div>
+<!-- ========================== END search ============================= -->
+
+
+
+
+
+
+
+      <!-- NETWORK -->
+      </div><div class="cell popwrap">
+        <button ESMcssroot="togbigsz togwid2 tog" 
+                ESMtoggletarget="popsandbox" ESMdeactivateid="networkclose">
+              <div class="togcontent togbigsz togwid2">
+                <div class="icon imgnet"><span>NETWORK</span></div>
+              </div>
+        </button>
+      <!-- NETWORK -->
+
+      <!-- DOC -->
+      </div><div class="cell popwrap">
+        <button ESMcssroot="togbigsz tog" 
+                ESMtoggletarget="popdoc" ESMdeactivateid="docclose">
+              <div class="togcontent togbigsz">
+                <div class="icon imgdoc"></div>
+              </div>
+        </button>
+      <!-- DOC -->
+
+      <!-- SPACER 
+      </div><div class="cell popwrap opacity5">
+            <div class="togcontent togbigsz whitebk widsep">
+              <div class="icon tus"></div>
+            </div>
+       END SPACER -->
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+<p class="f0">
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+ &nbsp; TESTNET enabled, details under Network
+</p>
+
+
+      <!-- NETWORK SLIDEOUT -->
+      <div id="popsandbox" 
+           ESMcssRoot="lev1 f0 slidefromright slidewid undermainbar lt slide" 
+           ESMfocusid="networkfoc">
+        <div class="pophead">
+          <button id="networkclose" class="close"></button>
+          <div class="poptitle">NETWORK</div>
+        </div>
+
+        <div class="popcontent">
+
+
+
+              <input class="tminus3" type="checkbox" id="sync_auto"
+                     title="Automatically resync" disabled> automatically
+                          load transaction data as needed</input>
+
+              <div class="line br10"></div>
+
+              <!-- SYNC POP -->
+                <div class="submitborder"><div class="popwrap left">
+                      <button ESMcssroot="togwid tog" 
+                              ESMtoggletarget="popsync"
+                              ESMdeactivateid="syncclose" id="syncbtn">
+                            <div class="togcontent togwid">
+                              <div class="icon imgpopleft"><span>sync</span></div>
+                            </div>
+                      </button>
+                  <div id="popsync"
+                           ESMcssRoot="lev2 popwid30 popleft" 
+                           ESMfocusid="sync_sync">
+                        <div class="pophead f0">
+                              <button id="syncclose" class="close"></button>
+                              <div class="poptitle">LOAD BITCOIN
+                                             TRANSACTIONS</div>
+                        </div>
+                        <div class="popcontent">
+
+                              <span class="tminus1">
+This will load transactions associated with the currently loaded content, 
+current author/owner, and any address entered into the search section.
+                              </span>
+
+                              <div class="line br7"></div>
+                              <span class="tminus1">Security warning: an 
+                                      internet connection will be opened 
+                                      (use of TOR browser recommended).</span>
+
+                              <div class="line br7"></div>
+                              <span class="tminus1"><i>Alpha test note:
+                                  not fully implemented</i></span>
+
+                              <div class="line br10"></div>
+                              <div class="line br4">
+                                <button id="sync_sync" class="submit"
+                                        onclick="sync();">
+                                      <div class="icon imgnet">
+                                               <span>OK, connect</span></div>
+                                </button>
+                              </div>
+                              <span class="hd err tus" id="sync_err"></span>
+                              <div id="_sync_stat">
+                                <span class="hd stat" id="sync_stat"></span>
+                              </div>
+                        </div>
+                  </div>
+                </div></div>
+              <!-- END SYNC SECTION -->
+
+
+        <!-- SANDBOX POP -->
+        <div class="submitborder"><div class="popwrap">
+                <button ESMcssroot="togwid tog" 
+                        ESMtoggletarget="sandboxpop"
+                        ESMdeactivateid="sandboxclose">
+                  <div class="togwid togcontent">
+                    <div class="icon imgpopleft"
+                         data-label="sandbox"><span>cache</span></div>
+                  </div>
+                </button>
+            <div id="sandboxpop" 
+                 ESMcssRoot="lev2 popnosuggest popleft" 
+                 ESMfocusid="txdb_data">
+              <div class="popwid30 pophead">
+                <button id="sandboxclose" class="close"></button>
+                <div class="poptitle">INTERNAL TRANSACTION CACHE</div>
+              </div>
+              <div class="popcontent">
+                <span class="inplabel">TRANSACTION DATA</span>
+                <textarea class="f1 JSONtx br" id="txdb_data"></textarea>
+                <button class="submit important br" onclick="txdbCreate();">
+                        <div class="icon imgcreate"
+                             data-label="submit"><span>verify/reset 
+                                              (if manually edited)</span></div>
+                </button>
+                <span class="hd err tus" id="txdb_err"></span>
+              </div>
+            </div>
+          </div></div>
+          <!-- END SANDBOX POP -->
+
+        </div>
+
+        <div class="popcontent tminus1 scroll">
+<p class="br">
+ALPHA version, not for production.
+TESTNET is enabled.  A faucet can be used to add seed 
+funding to an author/owner identity (see
+<a href="http://faucet.xeno-genesis.com/"
+target=_blank>faucet.xeno-genesis.com</a>;
+the Testnet version of the address is needed, 
+see "Prove author/owner identity" popup in "Issue/transfer" section).
+</p><p class="br">
+New transactions will not actually be sent to the network when "Send"
+is selected.
+Instead, they will be added to the 
+internal cache, which will simulate actual branches 
+of transactions on the blockchain.
+Raw (hexcoded) issue transactions can be sent manually by
+copying and pasting them to 
+<a href="http://tbtc.blockr.io/tx/push"
+target=_blank>tbtc.blockr.io/tx/push</a>.
+<b>Transfer transactions can not be posted to the network yet due to a bug.</b>
+
+
+
+
+
+<!--
+</p><p class="br">
+Actual bitcoin transaction data can be used.
+When actual bitcoin data is used and new transactions are 
+broadcast (not recommended at this time), 
+the sandbox should remain in sync with the blockchain.
+</p><p class="br">
+BBE formatted JSON text is expected, which can be obtained from:
+</p><p class="br3">
+<span class="tt">&nbsp; &nbsp; 
+http://blockexplorer.com/q/mytransactions/</span><b>address</b>
+</p><p class="br">
+<span class="tt">&nbsp; &nbsp; </span>
+[<a id="networkfoc" href="http://blockexplorer.com/q/mytransactions/"
+          target=_blank>link</a>]
+</p><p class="br">
+Data for individual transactions can be obtained from:
+</p><p class="br">
+<span class="tt">&nbsp; &nbsp; 
+        http://blockexplorer.com/rawtx/</span><b>txhash</b>
+</p><p class="br">
+and combined as follows:
+      <span class="tt">{ "1": </span><i>txdata</i><span class="tt">, 
+                         "2": </span><i>txdata</i><span class="tt">, 
+                         ... }</span>
+-->
+</p></div>
+      </div>
+      <!-- END NETWORK SLIDEOUT -->
+
+
+
+      <!-- DOC SLIDEOUT -->
+      <div id="popdoc" 
+           ESMcssRoot="slidewid undermainbar lt slide" 
+           ESMfocusid="docfoc">
+        <div class="pophead f0">
+          <button id="docclose" class="close"></button>
+          <div class="poptitle">RELEASE NOTES</div>
+        </div>
+        <div class="popcontent f0 tminus1 scroll"><p class="line br right">
+
+    </p><p class="br" id="docfoc" tabindex=0>
+    This client implements the
+      <a href="../../index.html" target=_blank 
+         title="Rarebit project home">Rarebit protocol</a>,
+a method designed to 
+enable collectible digital works to be issued and 
+traded on the bitcoin network.  Using a Rarebit client, 
+an artist or author can issue limited editions of  
+digital content online, and collectors can trade units 
+of the editions with the assurance they are authentic.
+    </p><p class="br">
+Rarebit works by associating the hash of a digital file
+with a small amount of bitcoin value, 
+producing a 'token' that is provably bound to 
+the content it represents.
+    </p><p class="br">
+    This app is an alpha test, pre-production release (see Network section
+    for additional info). 
+    It runs in the browser as a local process.
+    Development and testing was performed on recent releases of 
+    Firefox and Chrome (desktop versions).  A recent release of Firefox
+    is recommended (newer releases include a fast javascript compiler).
+    </p><p class="br">
+    <span class="b f0 br">GETTING STARTED</span>
+    </p><p class="br"><span class="b f1 tminus3">1. </span>
+Select <span class="f1 tminus3 b">CONTENT</span> to open a file.  
+The file's contents will be hashed
+and a Content ID calculated.
+    </p><p class="br"><span class="b f1 tminus3">2. </span>
+Select <span class="f1 tminus3 b">ISSUE/TRANSFER</span> 
+to issue an edition of the loaded content.  
+    </p><p class="br indent"><span class="b f1 tminus3">A. </span>
+Establish a provable identity for the author by entering or creating a 
+bitcoin private key.  If the identity has no funding, use a normal bitcoin wallet
+to send a small seed amount to the address (the seed is used to create tokens and
+pay fees when issuing editions or transferring lots).  
+Alpha version: use Testnet faucet to add seed (see Network section).
+    </p><p class="br indent"><span class="b f1 tminus3">B. </span>
+Select the Content ID to issue an edition.  
+Choose the number of units and
+select <span class="f1 tminus3 b">CREATE</span>, then 
+<span class="f1 tminus3 b">VERIFY/SEND</span> to finalize.  
+The new transaction proves both the existence
+of the content and that it originates from the author.
+    </p><p class="br10"><span class="b f1 tminus3">3. </span>
+After the edition is issued, a <span class="f1 tminus3 b">TRANSFER</span> 
+option will become available.  
+Select it to transfer ownership of units of the edition to collectors.
+    </p><p class="br right">
+      <a href="../../index.html" target=_blank id="projectimg"
+         title="Rarebit project home"><img src="../../doc/rblogosm.png"/></a>
+    </p>
+
+        </div>
+      </div>
+      <!-- END DOC SLIDEOUT -->
+
+
+
+
+      <!-- INFOBAR PANEL -->
+      <div class="panelwrap">
+        <div id="placard" 
+           ESMcssRoot="slidefromleft panel" 
+           ESMfocusid="cert_CID">
+            <div class="f0 widall">
+              <button id="infobarclose" class="close"></button>
+              <div class="rowsect">
+                    <div class="popcontent padleft5">
+                      <span class="inplabel br1">CONTENT ID</span>
+                      <span class="f1 CID tus" id="cert_CID"></span>
+                    </div>
+              </div><div class="rowsect floatright">
+                    <div class="popcontent padleft5">
+                      <span class="inplabel br1">NAME </span>
+                      <span class="f1 name tus" id="cert_name"></span>
+                    </div>
+              </div>
+            </div>
+        </div>
+        <button id="placardtog" ESMcssroot="f1 b tog" 
+                ESMpaneltarget="placard" ESMdeactivateid="infobarclose">
+        </button>
+      </div>
+      <!-- END INFOBAR PANEL -->
+
+
+
+
+</div></body>
+</html>
