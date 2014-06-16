@@ -4,137 +4,151 @@
 <head>
   <meta charset="utf-8">
   <title>Rarebit Project</title>
-  <meta content="Rarebit project" name="description">
+  <meta content="Rarebit project home" name="description">
   <meta content="Rarebit" name="author">
   <style>
     body {
       margin:0; padding:0;
-      font-family:"Arial", sans-serif; font-size:95%;
-      color:#404040; background-color:#c8c8c8;
-      font-stretch:expanded;
+      font-family: "Open Sans", sans-serif; font-size:100%;
+      color:#666; background-color:#c8c8c8;
     }
     table, td, .fit {
       border:0; margin:0; padding:0; border-spacing:0; text-align:left;
     }
-    a {color:#05e007;}
+    a {border-bottom:1px solid #d8d8d8; text-decoration:none; color:#25c;}
+    a:hover {border-color:#25c;}
     a:visited {color:gray;}
     .pg {
-      margin:0 auto; padding:0em 2em;
-      background-color:white; width:40em;
-      border:1px dotted black;
+      margin:0 auto; width:60%;
     }
-    .syn {
-      display:inline-block; color:#585858;
-      margin:0; padding:0.5em 1.5em;
-      border-top:1px dotted black;
-      border-bottom:1px dotted black;
+    @media all and (max-width:800px) { 
+      .pg {width:100%;}
+    }
+    .content {
+      padding:0.5em 3em; display:block;
+      background-color:#f8f8f8; 
     }
     .bar {
-      position:relative; top:0;
-      display:inline-block; width:100%;
-      border:0; margin:0; padding:0; padding-bottom:0.2em;
+      background-color:#fff; 
+    }
+    .dashbot {
+      border-bottom:2px solid #777;
     }
     .title {font-size:140%; font-weight:500;}
     .faqq {font-size:110%; font-weight:600;}
     .tt {font-family:"courier new","lucida console",monospace;}
+    .b {font-weight:600;}
+    .lt {color:#888;}
     .small {font-size:85%;}
     .smaller {font-size:75%;}
     .verysmall {font-size:60%;}
     .oneline {display:inline-block; white-space:nowrap;}
-    .right {float:right;}
+    .right {text-align:right;}
+    .new {color:#f00; font-size:90%;}
+    .indent {margin-left:2.5em; margin-bottom:1em; display:inline-block;}
   </style>
 </head>
 
-<body><br/><div class="pg">
+<body><div class="pg">
+
+
+<div class="content bar dashbot">
 
 
 <div class="fit right">
   <br/>
-  <!-- <img src="doc/rblogosm.png"/> -->
-  <img src="http://imageshack.com/a/img547/203/zkxe.png"/>
+  <img src="doc/rblogosm.png"/>
 </div>
 
 
-<br/>
-<br/>
-<br/>
-<br/>
+</div><div class="content">
+
+
 <br/>
 <br/>
 
-<span class="title oneline">Rarebit Project</span>
 
-<div>
-&nbsp;
-</div>
-<br/>
+<p>
+<span class="title oneline">Rarebit Project Home</span>
+</p>
 
-<div class="syn">
-Rarebit is a protocol designed to enable collectible digital works to be issued and traded on the 
 
-bitcoin network.
-Using a Rarebit client,
-an artist or author 
-can issue digitally signed limited editions of a work online,
-and collectors can trade units of the edition 
+</div><div class="content">
+
+
+<p class="small">
+Rarebit is a protocol 
+designed to enable collectible digital works to be issued 
+and traded on the bitcoin network.
+Using a Rarebit client, an artist or author can issue limited editions 
+of digital content online, and collectors can trade units of the editions 
 with the assurance they are authentic.
-</div>
+</p>
 
-<br/>
-<br/>
-<br/>
+<p class="small">
+Rarebit works by associating the hash of digital
+content with a small amount of bitcoin value, producing a 'token' that
+is provably bound to the content it represents.  The token is also
+provably bound to the author.
+</p>
+
+<p class="small">
+Protocols like Rarebit's are
+often referred to as "blockchain 2.0", or next generation, bitcoin 
+protocols.  Blockchain 2.0 protocols layer new functionality on top of 
+the bitcoin architecture.
+</p>
+
+</div><div class="content">
 
 
 <p>
-<a href="doc/rbprimer.html">Overview and specification</a>
+<span class="new b">NEW JUNE 2014</span> 
+<a href="client/web1/index.html" class="b">*Web1* client (alpha)</a> 
 <br/>
 <br/>
-&nbsp; &nbsp; &nbsp;
-<span class="small">
-The purpose of the Rarebit protocol layer and how it works
+<span class="small indent">
+A full client that runs in the browser.  
+Loads, hashes, issues editions, and transfers lots of
+digital works.  Alpha test version.  In this implementation,
+issue transactions carry the author's signature and thus serve
+as timestamped certificates of authenticity.
 </span>
 </p>
 
 
 <p>
-<a href="client/min/index.html">Min reference client</a> 
+<a href="doc/rbprimer.html" class="b">Specification (whitepaper)</a>
 <br/>
 <br/>
-&nbsp; &nbsp; &nbsp;
-<span class="small">
-A sparse reference client implemented in Javascript that runs 
-locally in the browser
+<span class="small indent">
+The purpose of the Rarebit protocol layer and how it works.
+Describes the protocol using signed certificates as content.
 </span>
 </p>
 
 
 <p>
-<a href="https://github.com/rarebit">Developer libraries and source code</a>
+<a href="client/min/index.html" class="b">Min reference client</a> 
 <br/>
 <br/>
-</p>
-
-<p>
-<br/>
-<span class="small">
-A full client for artists and collectors is in development.
-</span>
-</p>
-
-<p>
-<br/>
-<span class="small">
-The Rarebit protocol is in the public domain, and the software projects are open-source.
+<span class="small indent">
+A technical reference client implemented in Javascript that runs 
+locally in the browser.  Produces signed certificates as content.
 </span>
 </p>
 
 
-<!-- <br/>
-<span class="smaller">donations:</span>
-<span class="small tt">11126ij2aRzVDCTixDBVZ4ft2LS2KJmZUC</span> -->
+<p>
+<a href="https://github.com/rarebit" class="b">Developer libraries and source code</a>
+<br/>
+<br/>
+</p>
+
 
 <br/>
 <br/>
+<br/>
 
-</div><br/></body>
+</div></div></body>
 </html>
