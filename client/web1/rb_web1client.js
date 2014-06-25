@@ -302,7 +302,7 @@ function sync( ) {
       if (err && !txsin) return;
       setelv( "txdb_data", Bitcoin.ImpExp.BBE.export(seedWallet).text );
       warn( 'sync_stat',
-            "Sync complete (" + txsin + " transactions imported)" );
+            "Sync complete" );  // (" + txsin + " transactions imported)" );
       setelv( 'sync_err', "" );
       seedReshow();
     }
