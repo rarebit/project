@@ -869,9 +869,9 @@ function extractv( t ) {
     var i1 = t.indexOf( ": " );
     if (i1) {
       var t2 = t.substr( i1+2 );
-      var i2 = t2.indexOf( "'" );
+      var i2 = t2.indexOf( "," );
+      if (i2 < 0) i2 = t2.indexOf( "'" );
       if (i2 < 0) i2 = t2.indexOf( '"' );
-      if (i2 < 0) i2 = t2.indexOf( ',' );
       if (i2) t = t2.substr( 0, i2 );
     }
   }
