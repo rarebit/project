@@ -69,6 +69,16 @@ function pgload() {
   genClear();
   setelin( 'txdb_data', demoSeedData );
   setelin( 'gen_key', demoSeedKey );
+  if (!Rarebit)
+    return alert( "Some app files did not fully load (rarebit).  Page reload needed." );
+  if (!Bitcoin)
+    return alert( "Some app files did not fully load (bitcoinjs).  Page reload needed." );
+  if (!Bitcoin.ImpExp)
+    return alert( "Some app files did not fully load (ImpExp).  Page reload needed." );
+  if (!ESM || !TEM)
+    return alert( "Some app files did not fully load (ESM/TEM).  Page reload needed." );
+  if (!Bitcoin.Wallet.prototype.queryOutputs)
+    return alert( "Some app files did not fully load (mbitcoinjs).  Page reload needed." );
 }
 
 
