@@ -45,7 +45,7 @@
     .verysmall {font-size:60%;}
     .oneline {display:inline-block; white-space:nowrap;}
     .right {text-align:right;}
-    .new {color:#f00; font-size:90%;}
+    .new {color:#5b5;}
     .indent {margin-left:2.5em; margin-bottom:1em; display:inline-block;}
   </style>
 </head>
@@ -81,16 +81,16 @@
 Rarebit is a protocol 
 designed to enable collectible digital works to be issued 
 and traded on the bitcoin network.
-Using a Rarebit client, an artist or author can issue limited editions 
-of digital content online, and collectors can trade units of the editions 
-with the assurance they are authentic.
+Using a Rarebit client, an artist or author can issue 
+digital content online, and collectors can trade the content 
+with the assurance it is authentic.
 </p>
 
 <p class="small">
 Rarebit works by associating the hash of a digital file
-with a small amount of bitcoin value,
-which can be transferred indefinitely while remaining provably 
-bound to the content it represents and to the author that originated it.
+with a small amount of bitcoin value.  This value
+can be transferred indefinitely while remaining provably 
+bound to the content it represents and to the author from which it originated.
 </p>
 
 <!--<p class="small">
@@ -104,16 +104,25 @@ the bitcoin architecture.
 
 
 <p>
-<span class="new b">NEW JUNE 2014</span> 
-<a href="client/web1/index.html" class="b">*Web1* client (alpha)</a> 
+<span class="small new b">NEW JULY 2014</span> &nbsp;
+<a href="client/web1/index.html" class="b">*Web1* client beta</a> &nbsp;
+<span class="small">(fully functional client)</span>
 <br/>
 <br/>
 <span class="small indent">
 A full client that runs in the browser.  
-Loads, hashes, issues editions, and transfers lots of
-digital works.  Alpha test version.  In this implementation,
-issue transactions carry the author's signature and thus serve
+Loads, hashes, issues and transfers digital works.  
+In this implementation,
+issue transactions carry the author's signature and, once confirmed, serve
 as timestamped certificates of authenticity.
+<br/>
+<br/>
+  <span class="small indent">
+  CHANGE LOG <br/>
+  <span class="">July 12, 2014: Beta1</span> <br/>
+  <span class="">June 25, 2014: Alpha2</span> <br/>
+  <span class="">June 16, 2014: Alpha1</span> 
+  </span>
 </span>
 </p>
 
@@ -134,8 +143,7 @@ Describes the protocol using signed certificates as content.
 <br/>
 <br/>
 <span class="small indent">
-A technical reference client implemented in Javascript that runs 
-locally in the browser.  Produces signed certificates as content.
+A technical reference client.  Produces signed certificates as content.
 </span>
 </p>
 
@@ -148,15 +156,12 @@ locally in the browser.  Produces signed certificates as content.
 
 
 <br/><br/>
-<p class="box small">
-Note: The current Rarebit client runs on TestNet (it is not a production client yet).  
+<p class="box small">See also
 <a href="http://monegraph.com">Monegraph</a>,
 <!--
 (<a href="https://bitcointalk.org/index.php?topic=317090.msg3413471#msg3413471">
 see also</a>)-->
-which uses NameCoin,
-is available for those interested in
-getting started right away issuing collectible digital art.
+a system that uses the NameCoin blockchain to achieve similar goals.
 </p>
 
 
