@@ -50,7 +50,7 @@ a:hover {
   border-color: #888;
 }
 input:hover, textarea:hover {
-  background-color: #ffffc0;
+  background-color: #fffac0;
   opacity: 1;
 }
 button:hover, .act:hover {
@@ -84,7 +84,7 @@ button:focus, input:focus, textarea:focus,
   opacity: 1;
 }
 button:hover {
-  background-color: #ffffc0;
+  background-color: #fffac0;
   /*border-color: #aaa;*/
   fill: #555; color: #555;
   opacity: 1;
@@ -264,7 +264,7 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 .gridview.solidsep > .row > .rowsect > .cell,
 .gridview.solidsep > .cellgroup > .cell,
 .gridview.solidsep > .rowsect > .cellgroup > .cell {
-  border-right: 1px solid gray;
+  border-right: 1px solid #aaa;
 }
 .gridview > .cell:last-child,
 .gridview > .row > .cell:last-child,
@@ -490,7 +490,9 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
   .togwid3 { width: 200px; }
 }
 .barmainlt > .cellgroup > .cell > .tog {
-  background-color: rgba(255,255,255,0.6); /*opacity: 0.85;*/
+  background-color: rgba(255,255,255,0.6);
+  /*background-color: rgba(0,0,0,0.2);*/
+  color: #777; fill: #777;
 }
 .tog_focused {
   background-color: #f0f4f8 !important;
@@ -501,8 +503,13 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
   background-color: #f0f0d0 !important;
 }
 .tog_hover {
-  background-color: #ffffc0 !important;
+  background-color: #fffac0 !important;
   opacity: 1 !important;
+}
+.barmainlt > .cellgroup > .cell > .tog_hover,
+.barmainlt > .cellgroup > .cell > .tog_focused,
+.barmainlt > .cellgroup > .cell > .tog_toggled {
+  color: #555; fill: #555;
 }
 .togpanel_toggled {
   background-color: transparent;
@@ -1121,6 +1128,7 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 .notopborder {border-top: 0;}
 .nobottomborder {border-bottom: 0;}
 .nowrap {white-space: nowrap;}
+.wrap {white-space: normal;}
 .inline {display: inline-block;}
 .line {display: block; white-space: nowrap;}
 .top {vertical-align: top;}
