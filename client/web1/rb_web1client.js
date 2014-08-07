@@ -31,13 +31,14 @@ var txhashclass = "f1 txhash";
 var timeclass = "f1 time";
 var urlclass = "f1 url";
 
-var demoSeedData = JSON.stringify( {
+var demoSeedData = JSON.stringify( 
+{
   "A pretend transaction": { 
-    comment: "seed funding for demo identity",
+    "comment": "seed funding for demo identity",
     "hash": "acbeaeecdfacadceaaae1becdfaffabcadee9bddfcfaaadcedaaeeafabcdbdf0",
     "time": "2013-08-03 11:53:17",
     "out": [ {
-        "comment": "3rd output of transaction, spendable with passphrase " + 
+        "comment": "3rd output of transaction, spendable with passphrase " +
                    "'demo identity (seeded with 0.05 btc)'",
         "index": 2,
         "value": "0.05",
@@ -45,15 +46,9 @@ var demoSeedData = JSON.stringify( {
       }
     ]
   }
-}, null, 2 );
+}
+, null, 2 );
 //var demoIssuer = "wind glue oat golf ear mug seat wave wire";
-var demoOwner = "wine tale bits oval sine rose drab if weld song when";
-var demoOwnerPub = "";
-var demoOwner2Pub = 
-  "04f49a2b697137978bb31d8059d94dce7e713c2e023805d18eb0"+
-  "1f7e2f469747642e90ff2a3817ed9165392d7ebe879ea5e508ff"+
-  "d19d9dee98956ca5f35a587fa5";
-//var demoSeedKey = "5JQZWoGQWGPMDwtuUkR5ri6PaLVQpfegCykXVtW41uDbKsGSqoj";
 var demoSeedKey = "demo identity (seeded with 0.05 btc)";
 
 
@@ -63,6 +58,7 @@ var demoSeedKey = "demo identity (seeded with 0.05 btc)";
 var contentHashKey = null;
 var seedWallet = null;
 var _testnet = true;
+var __offline_mode = false;
 
 
 /*
@@ -78,10 +74,12 @@ function pgload() {
   xfertxClear();
   genClear();
   origtxEnableEdition();
-  //setelin( 'txdb_data', demoSeedData );
-  //setelin( 'gen_key', demoSeedKey );
-  setelv( 'txdb_data' );
-  setelin( 'gen_key' );
+  if (__offline_mode)
+    setelin( 'txdb_data', demoSeedData ),
+    setelin( 'gen_key', demoSeedKey );
+  else
+    setelv( 'txdb_data' ),
+    setelin( 'gen_key' );
   if (!Rarebit)
     return alert( "App files did not fully load (rarebit).  Page reload needed." );
   if (!Bitcoin)
@@ -186,7 +184,7 @@ function hashFile( file ) {
       contentHashKey = new Rarebit.HashKey();
       contentHashKey.setFromContent( c );
       contentShowNew();
-      setTimeout( function(){resync('content_stat','content_err')}, 50 );
+      setTimeout( resync, 50 );
     }
     reader.readAsArrayBuffer( file );
   }
@@ -293,21 +291,12 @@ function seedResetDB( keyerrid, newwallet ) {
   var t;
   if (newwallet)
     t = Bitcoin.ImpExp.BBE.export(newwallet).text,
-    setelv( 'txdb_data', t ); //TODO: brkpt
+    txdbSet( t ); //TODO: brkpt
   else
     t = getelv( 'txdb_data' );
   seedWallet = Rarebit.Tx.createSeedWallet( t, ki?[ki.key]:null );
   seedReshow();
   setelv( 'txdb_stat', "OK (" + seedWallet.txCount + " transactions)" );
-}
-function seedEmpty( keyerrid ) {
-  setelv( 'txdb_data' );
-  seedResetDB( keyerrid );
-}
-function seedReset( keyerrid, rand ) {
-  seedKey = genKey( rand );
-  seedResetDB( keyerrid );
-  return seedKey;
 }
 function seedClear( start ) {
   setelv( ['gen_addr','seed_lots','seed_issuer','seed_stat',
@@ -317,18 +306,19 @@ function seedClear( start ) {
 }
 function seedOpen( rand ) {
   seedWallet = seedKey = null;
-  setelv( 'txdb_data' );
+  txdbClear();
   seedClear();
   lotsClear();
   syncSetNeeded( true, "Resync needed" );
   try {
-    seedReset( 'gen_err', rand );
+    seedKey = genKey( rand );
+    seedResetDB( 'gen_err' );
     //syncSetNeeded( true, "Resync needed" );
     seedSync();
     return true;
   }
   catch( e ) {
-    seterr( 'seed_err', e );
+    seterr( 'gen_err', e );
   }
 }
 function seedSync( doit ) {
@@ -337,7 +327,10 @@ function seedSync( doit ) {
            'seed_avail','seed_availouts','seed_err'], "" );
   lotsClear();
   try {
-    seedEmpty( 'seed_err' );
+    if (!__offline_mode)
+      txdbSet(), seedResetDB( 'seed_err' );
+    if (!seedKey)
+      return;
     if (!getelv( 'lots_CID') && !getelv('lots_issuer'))
       setelv( 'lots_owner', seedKey.addressStr );
     resync( 'seed_stat', 'seed_err', doit );
@@ -357,12 +350,14 @@ var syncNeeded = true;
 function syncSetNeeded( needed, msg ) {
   syncNeeded = needed;
   msg = msg ? msg : "Resync needed";
-  warnstat( 'seed_stat', 'seed_err', needed?msg:"" );
+  if (seedKey)
+    warnstat( 'seed_stat', 'seed_err', needed?msg:"" );
 }
 function synctell( statid, errid, statmsg, errmsg, ind ) {
   warnstat( statid, errid, statmsg, errmsg );
-  warnstat( 'content_stat', 'content_err', statmsg, errmsg ),
-  warnstat( 'seed_stat', 'seed_err', statmsg, errmsg );
+  //warnstat( 'content_stat', 'content_err', statmsg, errmsg );
+  if (seedKey)
+    warnstat( 'seed_stat', 'seed_err', statmsg, errmsg );
 }
 function syncdone( statid, errid, wallet ) {
   synctell( statid, errid );
@@ -405,7 +400,6 @@ function resync1( syncWallet, addrs, statid, errid, ind, onok, onerr ) {
       if (!unc)
         Bitcoin.ImpExp.Sync.loadAddrs( syncWallet, callbacks, addrs, _testnet );
       else {
-        //synctell1( statid, errid, unc+" unconfirmed transactions, wait to resync", "", ind );
         synctell1( statid, errid, "Unconfirmed transactions, wait to resync", "", ind );
         if (onerr) onerr();
       }
@@ -506,6 +500,16 @@ function txdbCreate() {
     seterr( 'txdb_err', e );
   }
 }
+function txdbSet( d ) {
+  setelv( 'txdb_data', d );
+  warnstat( 'txdb_stat', 'txdb_err' );
+}
+function txdbClear() {
+  if (__offline_mode)
+    warnstat( 'txdb_stat', 'txdb_err' );
+  else
+    txdbSet();
+}
 
 
 /*
@@ -513,7 +517,7 @@ function txdbCreate() {
 */
 function newtxSetupVerify( tx, idpre ) {
   var json = Rarebit.Tx.toJSON( tx );
-  var txhash = JSON.parse(json).hash;
+  var txhash = JSON.parse( json ).hash;
   json = JSON.stringify( JSON.parse('{"1":'+json+'}'), null, 2 );
   raw = Rarebit.Tx.toRaw( tx );
   enel(   idpre+'_sendbtn', true );
@@ -541,17 +545,21 @@ function newtxConfirm( idpre ) {
   if (!json)
     return;
   Rarebit.Tx.addDataToWallet( json, seedWallet );
-  setelv( "txdb_data", Bitcoin.ImpExp.BBE.export(seedWallet).text );
+  txdbSet( Bitcoin.ImpExp.BBE.export(seedWallet).text );
 }
 function newtxSent( idpre, confirm ) {
   if (confirm) newtxConfirm( idpre );
   //id2el( idpre+'_txhash' ).focus();
-  setelv( idpre+'_sendlabel', confirm?"transaction confirmed":"transaction sent" );
+  setelv( idpre+'_sendlabel', "transaction sent" );
   enel(   idpre+'_send', false );
   seedReshow();
   lotsSetup( getelv('cert_CID'), "", getelv('seed_addr') );
   warnstat( idpre+'_sendstat', idpre+'_senderr', "" );
-  if (!confirm) syncSetNeeded( true, "New transaction sent, resync when confirmed" );
+  function didit() {
+    syncSetNeeded( true, "New transaction sent, resync when confirmed" );
+    clickSection( 'popseed' );
+  }
+  setTimeout( didit, 50 );
 }
 function newtxSend( idpre ) {
   var callbacks = {
@@ -661,11 +669,9 @@ function origtxCreate() {
 */
 function origtxSend() {
   newtxSend( 'origtx' );
-  if (!getelv( "xfertx_pub"))
-    setelv( "xfertx_pub", Bitcoin.Address.fromPrivOrPass(demoOwner).pubHex );
 }
 function origtxConfirm() {
-  newtxSent( 'origtx', true );
+  newtxSent( 'origtx', __offline_mode );
 }
 
 
@@ -763,10 +769,6 @@ function xfertxClear( clronly ) {
   if (!clronly)
     xfertxSetup();
 }
-function xfertxShowOwnedLots( ) {
-  lotsSetup();
-  return true;
-}
 
 
 /*
@@ -813,13 +815,9 @@ function xfertxCreate() {
 */
 function xfertxSend() {
   newtxSend( 'xfertx' );
-  //if (!demoOwnerPub)
-    //demoOwnerPub = Bitcoin.Address.fromPrivOrPass(demoOwner).pubHex;
-  //if (xfertx_newowners[0].pubkey.toString() == demoOwnerPub)
-    //setelv( "xfertx_pub", demoOwner2Pub );
 }
 function xfertxConfirm() {
-  newtxSent( 'xfertx', true );
+  newtxSent( 'xfertx', __offline_mode );
 }
 
 
@@ -933,11 +931,18 @@ function lotsStart( cid, issuer, owner ) {
     lotsSyncNeeded = true;
 }
 function lotsSetup( cid, issuer, owner ) {
-  if (cid && !getelv("lots_CID")) {
+  /* if (cid && !getelv("lots_CID")) {
     setelv( "lots_CID", cid );
     setelv( "lots_issuer", issuer );
     setelv( "lots_owner", owner );
-  }
+  } */
+  if (cid)
+    setelv( 'lots_CID', cid ),
+    setelv( ['lots_issuer','lots_owner'], "" );
+  else
+    if (owner && !getelv("lots_CID"))
+      setelv( 'lots_owner', owner ),
+      setelv( 'lots_issuer', "" );
   lotsClear();
 }
 
@@ -1107,7 +1112,7 @@ function genMinedone( msg ) {
 UI helpers
 */
 function id2el( id ) {
-  return document.getElementById( id );
+  return id ? document.getElementById( id ) : null;
 }
 function setelcls( id, c ) {
   if (id2el(id)) id2el(id).className = c;
@@ -1273,12 +1278,13 @@ function fmttxhash( h, len, b64 ) {
          "</a>";
 }
 function fmttime( t ) {
-  t = new Date( t );
+  function to2(t2) {return String(t2).length==1 ? ('0'+t2) : t2;}
+  t = t ? new Date( t ) : new Date();
   t = t.getUTCFullYear() + '-' + 
-      (t.getUTCMonth()+1) + '-' +
-      t.getUTCDate() + ' ' +
-      t.getUTCHours() + ':' +
-      t.getUTCMinutes();
+      to2(t.getUTCMonth()+1) + '-' +
+      to2(t.getUTCDate()) + ' ' +
+      to2(t.getUTCHours()) + ':' +
+      to2(t.getUTCMinutes());
   return "<div class='" + timeclass + "'>" + 
            t + 
          "</div> " + fmttag( 'UTC' );
@@ -1358,6 +1364,9 @@ function fmtitem( data, descr, linenum ) {
   if (descr.typ == 'br2')
     return "<div class='" + subline2class + "'></div>";
   item = descr.getitem ? descr.getitem(linenum) : data[descr.item];
+  if (__offline_mode)
+    if (descr.typ == 'time' && !item)
+      return fmttime();
   if (item == undefined)
     return "";
   if (descr.typ == 'indent')
