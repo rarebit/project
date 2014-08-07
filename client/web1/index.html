@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Rarebit Client *WEB1* BETA1</title> 
+  <title>Rarebit Client *WEB1* BETA2</title> 
   <meta content="rarebit client" name="description">
   <meta content="Rarebit" name="author">
   <meta http-equiv="Cache-Control" content="no-store,no-cache">
@@ -36,7 +36,7 @@
                {display:block; margin-bottom:0.3em; font-size:90%;}
     .lotlist .fmtsubline2 {margin-bottom:0.5em;}
     .lotlist .txhash, .lotlist .int {font-size:85%;}
-    .lotlist .url {font-size:110%; color:#970;}
+    .lotlist .url {font-size:110%; color:#964;}
     .lotlist.items button {border:1px solid #d9d9d9;}
     .lotlist.items button:hover {border-color:#aaa;}
     #seed_lots {font-size:90%;}
@@ -51,11 +51,11 @@
     .CIDinp, .autinp, .owninp, .urlinp {width:22em; max-width:100%;}
     .keyinp, .pubinp, .textinp, .titleinp {width:100%;}
     .textinp {height:8em;}
-    .pubinp {font-size:90%; height:4em; color:#606060;}
-    .pub {font-size:85%; height:4em; color:#606060;}
+    .pubinp {font-size:90%; height:4em; line-height:1; color:#606060;}
+    .pub {font-size:85%; height:3em; line-height:1; color:#606060;}
     .priv {font-size:85%; color:#606060;}
     .keyinp, .err {color:#f06060;}
-    .keyinp {font-size:90%;}
+    .keyinp {font-size:90%; line-height:1em; height:4em;}
     .CID, .CIDinp, .qty, .value, .stat {color:#78b058; font-size:110%;}
     .stat {color:#60e060;}
     .time {font-size:103%;}
@@ -280,7 +280,7 @@ access to the local file system).
           <!-- SEED TOGGLE -->
           <button ESMcssroot="togbigsz togwid2 tog" 
                   ESMtoggletarget="popseed"
-                  ESMdeactivateid="seedclose">
+                  ESMdeactivateid="seedclose" id="seed_mainbtn">
                 <div class="togcontent togwid2 togbigsz">
                   <div class="icon imgissue"><span>ISSUE/TRANSFER</span></div>
                 </div>
@@ -318,13 +318,21 @@ A normal bitcoin address is used to identify an author or owner.
 An existing address can be used or a new key/address pair can be generated.
 The key for the address is needed to sign new transactions.
 </p><p class="br">
+Generated keys or passphrases must be written down or memorized 
+(this app does not save 
+any data on the local device).  
+Made up phrases are usually not secure.  
+A random phrase can be made
+easier to remember by forming a story with the words in the phrase.
+The more evocative a narrative is, the easier it will be to remember,
+i.e., a story should be rich with sense information - sights, smells, etc.
+</p><p class="br">
 The author/owner address holds content collections, 
 i.e., content issued and/or aquired.
 </p><p class="br">
-Open content is needed to issue or transfer.
 Content is issued by creating a transaction that sends an original or 
 an edition
-of the content to the author's address 
+of the open content to the author's address 
 (the author is then the owner).
 An issue transaction, once sent and confirmed,
 serves as a timestamped certificate of authenticity
@@ -349,7 +357,7 @@ If both an original and an edition of the same content is issued,
 the original will appear to be part of the edition.
 In order to keep originals and editions
 distinguishable, slightly different versions of a content file
-can be used (the file metadata, i.e., title or date, can be changed).
+can be authored (the file metadata, i.e., title or date, can be changed).
 Any difference in content results in a unique Content ID.
 </p>
 </div></div>
@@ -377,23 +385,26 @@ Any difference in content results in a unique Content ID.
                             </div>
                       </button>
                   <div id="popseedkey"
-                           ESMcssRoot="popnosuggest lev2 popwid25 popdown" 
-                           ESMfocusid="gen_key">
+                           ESMcssRoot="popnosuggest lev2 popwid30 popdown" 
+                           ESMfocusid="gen_verifykey">
                         <div class="pophead f0">
                               <button id="seedkeyclose" class="close"></button>
                               <div class="poptitle">PROVE AUTHOR/OWNER IDENTITY</div>
                         </div>
                         <div class="popcontent">
                               <span class="inplabel">PRIVATE KEY OR PASSPHRASE</span>
-                              <textarea class="inp keyinp br3" id="gen_key"></textarea>
+                              <textarea class="inp keyinp br3"
+                                        id="gen_key"></textarea>
                               <div class="line br4">
                                 <button id="gen_verifykey" class="submit"
-                                        onclick="seedOpen();">
+                                        onclick="seedOpen();" title=
+"Use entry as key (made up phrases are usually not secure - see section help)">
                                       <div class="icon imgkey"><span>verify 
                                                          entry</span></div>
                                 </button>
                                 <button id="gen_randomkey" class="submit"
-                                      onclick="seedOpen(true);">
+                                      onclick="seedOpen(true);"
+title="Generate a random passphrase to be written down or memorized">
                                       <div class="icon imgrand">
                                                  <span>new random</span></div>
                                 </button>
@@ -618,18 +629,16 @@ Any difference in content results in a unique Content ID.
                target=_blank>tbtc.blockr.io/tx/push</a> (testnet)
 </div><div class="br indent"><a href="http://btc.blockr.io/tx/push"
                target=_blank>btc.blockr.io/tx/push</a> (mainnet)
-</div><div class="br3">Resync after ten minutes.</div>
 </div>
-<!--
+</div>
                       <div class="line">
                         <button id="origtx_confirm" class="submit"
                                 onclick="origtxConfirm();" 
-                                title="Click to indicate transaction has been confirmed">
+                                title="Click to indicate transaction has been manually sent">
                           <div class="icon imgsend"><span class="nowrap" 
-                                 id="origtx_confirmlabel">transaction confirmed</span></div>
+                                 id="origtx_confirmlabel">transaction sent</span></div>
                         </button>
                       </div>
--->
 
                             </div>
                           </div>
@@ -672,16 +681,6 @@ Any difference in content results in a unique Content ID.
                       <span class="inplabel"> &nbsp; &nbsp; </span>
                       <span id="seed_lots" class="f1 qty"></span>
                 </div>
-<!--
-                <div class="submitborder">
-                  <button class="tog togwid submitacts" 
-                    onclick="if(xfertxShowOwnedLots())clickSection('lots_mainbtn');">
-                        <div class="togcontent togwid">
-                          <div class="icon imgshow"><span>show lots</span></div>
-                        </div>
-                  </button>
-                </div>
--->
 
     <!-- XFER POP -->
     <div class="submitborder"><div class="popwrap left">
@@ -887,18 +886,18 @@ Any difference in content results in a unique Content ID.
                target=_blank>tbtc.blockr.io/tx/push</a> (testnet)
 </div><div class="br indent"><a href="http://btc.blockr.io/tx/push"
                target=_blank>btc.blockr.io/tx/push</a> (mainnet)
-</div><div class="br3">Resync after ten minutes</div>
 </div>
-<!--
+</div>
+
                       <div class="line">
                         <button id="xfertx_confirm" class="submit"
                                 onclick="xfertxConfirm();" 
-                                title="Click to indicate transaction has been confirmed">
+                                title="Click to indicate transaction has been manually sent">
                           <div class="icon imgsend"><span class="nowrap" 
-                                 id="xfertx_confirmlabel">transaction confirmed</span></div>
+                                 id="xfertx_confirmlabel">transaction sent</span></div>
                         </button>
                       </div>
--->
+
 
                             </div>
                           </div>
@@ -1118,11 +1117,7 @@ by entering the author's address.
  &nbsp; See also Getting Started under ?
  <br/>
  <br/>
- &nbsp; BETA1, Firefox recommended 
- <br/>
- &nbsp; Tested on Firefox and Chrome
- <br/>
- &nbsp; (network functions tested only on Firefox)
+ &nbsp; Firefox recommended for best results
 </span>
 </p>
 <br/>
@@ -1177,17 +1172,7 @@ This will load transactions associated with the currently loaded content,
 current author/owner, and any address entered into the search section.
                               </span>
 
-                              <div class="line br7"></div>
-<!--
-                              <span class="tminus1"><i>
-Beta test note: 
-Content ID is currently not sufficient by itself.  Author must also 
-be available from one of the above 
-locations in order to retrieve all the needed transactions.  
-Owner may also be needed.</i></span>
--->
-
-                              <div class="line br10"></div>
+                              <div class="line br15"></div>
                               <div class="line br4">
                                 <button id="sync_sync" class="submit"
                                         onclick="sync();">
@@ -1254,7 +1239,7 @@ Owner may also be needed.</i></span>
                 <br/>
               </div>
               <div class="br10"><div class="tminus3">
-                Beta1 note: not fully tested on MainNet - 
+                Beta note: not fully tested on MainNet - 
                 use of MainNet is at user's risk
               </div></div>
 
