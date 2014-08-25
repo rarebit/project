@@ -44,10 +44,10 @@ textarea {
      theme styles for basic elements
 */
 a {
-  color: inherit; text-decoration: none; border-bottom: 1px solid #eee;
+  color: #46b; text-decoration: none; border-bottom: 1px solid transparent;
 }
 a:hover {
-  border-color: #888;
+  border-color: #bbb;
 }
 input:hover, textarea:hover {
   background-color: #fffac0;
@@ -369,25 +369,35 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
     icons with labels
 */
 .icon {
-  vertical-align: middle;
+  /*vertical-align: middle;*/
+}
+.icon.iconright {
+  width: 100%;
+  text-align: right;
 }
 .icon:before {
   position: absolute;
-  left: 10px; top: 5px; width: 1em;
+  left: 10px; top: 0px; width: 1em;
   text-align: center;
 }
-.icon > span {
-  margin-left: 3.2em; margin-right: 20px;
+.icon.iconright:before {
+  right: 10px; left: auto;
+}
+.icon > span, .iconlabel {
+  margin-left: 3.4em; margin-right: 16px;
   font-family: "lucida console", sans-serif;
-  font-size: 0.5em;
-  text-overflow: ellipsis;
+  font-size: 11px;
+  overflow-x: hidden;
   text-align: left;
-  vertical-align: middle;
+  /*vertical-align: middle;*/
   /*content: attr(data-label);*/
 }
-.icon.nolabel {
-  margin: 0; padding: 0;
-  width: 1.9em;
+.icon.iconright > span, .iconlabel.iconright {
+  margin-right: 4.2em; margin-left: 16px;
+}
+.icon.noicon > span, .iconlabel.noicon {
+  text-align: center;
+  margin-right: 16px; margin-left: 16px;
 }
 .headlabel {
   margin-left: 0.7em;
@@ -468,21 +478,27 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 /*
      buttons that control popups
 */
-.tog, .togsz, .togcontent, .togpanel {
+.tog, .togsz, .togcontent, .togpanel, .submit {
   height: 30px;
-  font-size: 18px;
+  font-size: 22px;
   white-space: nowrap;
+}
+.tog, .togsz, .togpanel {
+  vertical-align: middle;
 }
 .togbigsz {
   height: 34px;
   font-size: 26px;
 }
-.tog, .togpanel {
-  position: relative;
+.tog, .togpanel, .submit {
+  /*position: relative;*/
   min-width: 1.8em;
-  border: 0; margin: 0; padding: 0;
+  margin: 0; padding: 0;
   cursor: pointer;
   text-align: left;
+}
+.tog, .togpanel {
+  border: 0;
 }
 @media all and (min-width:701px) {
   .togwid { width: 160px; }
@@ -491,7 +507,8 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 }
 .barmainlt > .cellgroup > .cell > .tog {
   background-color: rgba(255,255,255,0.6);
-  /*background-color: rgba(0,0,0,0.2);*/
+  /*background-color: #fff;
+  background-color: rgba(0,0,0,0.2);*/
   color: #777; fill: #777;
 }
 .tog_focused {
@@ -500,7 +517,7 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 }
 .tog_toggled:not(.tog_focused) {
   opacity: 1 !important;
-  background-color: #f0f0d0 !important;
+  background-color: #f0e6d0 !important;
 }
 .tog_hover {
   background-color: #fffac0 !important;
@@ -514,32 +531,45 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 .togpanel_toggled {
   background-color: transparent;
 }
-.togcontent.togbigsz > .icon:before {
-  left: 10px;
-  top: 3px;
-}
-.togcontent > .icon:after {
-  font-size: 11px;
-}
-.togcontent > .icon span, .togcontent > .iconlabel, .submit > .icon span {
-  font-size: 11px;
-}
-.togcontent > .icon span {
+.togcontent > .icon {
   position: relative;
-  top: 0.25em;
+  top: 4px;
 }
-.togcontent.togbigsz > .icon:after {
-  font-size: 0.55em;
+.togcontent.togbigsz > .icon /*:before*/ {
+  top: 5px;
+}
+.togcontent > .icon span, .togcontent > .iconlabel, .togcontent > span {
+  font-size: 11px;
+  position: relative;
+  vertical-align: top;
+  top: 6px;
+}
+.togcontent > span {
+  top: 9px;
+  margin-left: 2em; margin-right: 2em;
+}
+.togcontent.critical {
+  width: 100%;
+}
+.togcontent.critical > span {
+  top: 7px;
 }
 .togcontent.togbigsz > .icon span, .togcontent.togbigsz > .iconlabel {
-  font-size: 0.5em;
-  top: 0.07em;
+  font-size: 13px;
+  top: 7px;
+}
+.togcontent > .icon.nolabel {
+  width: 1.5em;
+}
+.togcontent > .icon.nolabel > span {
+  max-width: 0; margin: 0; padding: 0;
+  visibility: hidden;
 }
 @media all and (max-width:700px) {
-  .togcontent.togbigsz > .icon:after {
+  /*.togcontent.togbigsz > .icon:after {
     margin-left: 0;
     content: '';
-  }
+  }*/
   .togcontent.togbigsz > .icon {
     max-width: 1em;
   }
@@ -547,7 +577,7 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
   .togcontent.togbigsz > .iconlabel, 
   .togcontent.togbigsz > .iconrightlabel {
     max-width: 0; margin: 0; padding: 0;
-    text-overflow: hidden;
+    overflow-x: hidden;
     visibility: hidden;
   }
 }
@@ -714,9 +744,9 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
   }
   .popleft_toggled, .popright_toggled, .popup_toggled, .popdown_toggled, .pop_toggled {
     color: #777; fill: #777;
-    box-shadow: 3px 3px 3px rgba(0,0,0,0.4);
-    -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,0.4);
-    -moz-box-shadow: 3px 3px 3px rgba(0,0,0,0.4);
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.4);
+    -webkit-box-shadow: 4px 4px 4px rgba(0,0,0,0.4);
+    -moz-box-shadow: 4px 4px 4px rgba(0,0,0,0.4);
     /*animation-duration: 0.25s;
     animation-name: fadeintog;
     animation-timing-function: ease;*/
@@ -1045,8 +1075,10 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 .panelhead, .togpanel {
   display: inline-block;
 }
-.pophead, .slidehead {
+.pophead, .slidehead, .popsep {
   border-bottom: 1px solid #ddd;
+}
+.pophead, .slidehead {
   border-top-left-radius: 3px; -webkit-border-top-left-radius: 3px;
   border-top-right-radius: 3px; -webkit-border-top-right-radius: 3px;
 }
@@ -1060,15 +1092,18 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
 */
 .close, .closeleft, .help {
   position: absolute; top: 0;
-  border: 1px solid #aaa;
+  border: 1px solid #ddd;
   border-top: 0;
-  padding-top: 1px; padding-bottom: 1px;
-  padding-left: 3px; padding-right: 2px;
-  font-size: 0.8em;
+  font-size: 14px;
+  width: 24px;
+  height: 20px;
   background-color: transparent;
+  text-align: center;
+}
+.close:before, .closeleft:before, .help:before {
+  margin: 0; padding: 0; 
 }
 .close:before, .closeleft:before {
-  /*font-weight: bold;*/
   content: 'X';
 }
 .help:before {
@@ -1081,7 +1116,7 @@ button:disabled, input:disabled, textarea:disabled, .act:disabled {
   left: 12px;
 }
 .help {
-  right: 40px;
+  right: 39px;
 }
 .panel > .close, .panelcontent > .close, .panelhead > .close,
 .panel > .help, .panelcontent > .help, .panelhead > .help {
