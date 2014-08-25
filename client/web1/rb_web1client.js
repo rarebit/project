@@ -106,6 +106,8 @@ function pgload() {
       syncEnableTestnet( false );
     clickSection( 'lots_mainbtn' ), setTimeout( lotsFind, 200 );
   }
+  else
+    clickSection( 'doc_mainbtn' );
 }
 
 
@@ -281,7 +283,10 @@ function seedReshow( ) {
     if (Rarebit.Tx.isQtyZero( t ))
       setelv( 'seed_lots', "" );
     else
-      setelv( 'seed_lots', fmtqty(t,'OWNED','OWNED') );
+      if (Rarebit.Tx.compareQtys( t, '1' ) <= 0)
+        setelv( 'seed_lots', " " );
+      else
+        setelv( 'seed_lots', fmtqty(t,'OWNED','OWNED') );
   }
 }
 var seedKey = null;
@@ -497,7 +502,9 @@ function txdbCreate() {
     syncdone( 'txdb_stat', 'txdb_err' );
   }
   catch( e ) {
+    seedReshow();
     seterr( 'txdb_err', e );
+    syncSetNeeded( true );
   }
 }
 function txdbSet( d ) {
@@ -522,7 +529,7 @@ function newtxSetupVerify( tx, idpre ) {
   raw = Rarebit.Tx.toRaw( tx );
   enel(   idpre+'_sendbtn', true );
   enel(   idpre+'_send', true );
-  setelv( idpre+'_sendlabel', "send this transaction (IRREVERSIBLE!)" );
+  setelv( idpre+'_sendlabel', "send transaction (IRREVERSIBLE!)" );
   setelv( idpre+'_JSON', json );
   setelv( idpre+'_raw', raw );
   setelv( idpre+'_pushhex', raw );
@@ -889,7 +896,15 @@ function lotsFind2( CIDid, issuerid, ownerid, validid, invalidid, errid, statid 
     return warn( 'lots_err', "Valid bitcoin address expected (author)" );
   if (getelv(ownerid) && !Bitcoin.Address.validate( getelv(ownerid) ))
     return warn( 'lots_err', "Valid bitcoin address expected (owner)" );
-  if (!seedWallet) seedWallet = Rarebit.Tx.createSeedWallet( getelv("txdb_data"), [] );
+  if (!seedWallet) {
+    try { 
+      seedWallet = Rarebit.Tx.createSeedWallet( getelv("txdb_data"), [] );
+    }
+    catch( e ) { 
+      setelv( 'lots_err', e.toString() );
+      seedWallet = Rarebit.Tx.createSeedWallet( "", [] );
+    }
+  }
   if (syncNeeded || lotsSyncNeeded)
     resync( statid, errid, false, true, onresyncok, null );
   else
@@ -1042,14 +1057,22 @@ function lotTrace() {
   gen or mine keypair 
 */
 function genKey( rand ) {
+  function spaces( k ) {
+    // detect leading and trailing spaces
+    return 
+  }
   try {
     var key = rand ? "" : getelv( 'gen_key' );
     if (!rand && key.length < 20)
       throw new Error( "At least 20 characters expected" );
     var keyinfo = Bitcoin.Address.fromPrivOrPass( key, key_to_english );
     if (!rand && key.substr(0,1) == '5' && keyinfo.privateStr != key)
-      throw new Error( "Bitcoin standard expected ('5...')" );
+      throw new Error( "Bitcoin key expected ('5...')" );
     genSetup( keyinfo );
+    if (key.substr(0,1) == ' ')
+      setelv( "gen_err", "Warning: leading space(s) in phrase" );
+    if (key.substr(key.length-1,1) == ' ')
+      setelv( "gen_err", "Warning: trailing space(s) in phrase" );
     return keyinfo;
   }
   catch( e ) {
