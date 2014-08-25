@@ -11,6 +11,6 @@ Rarebit is a protocol used to record and transfer digital collectibles (digital 
 
 Rarebit works by associating the hash of a digital file with a small amount of bitcoin value. This value can be transferred indefinitely while remaining provably bound to the content it represents and to the author that issued it.
 
-Project site includes a client app that runs in the browser. Loads, hashes, issues and transfers digital works.
+Project site includes a client app that runs in the browser. Loads, hashes, issues and transfers digital works. Beta 3, 2014-08-25.
 
 
