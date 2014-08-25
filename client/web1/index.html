@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Rarebit Client *WEB1* BETA2</title> 
+  <title>Rarebit Web Client Beta3</title> 
   <meta content="rarebit client" name="description">
   <meta content="Rarebit" name="author">
   <meta http-equiv="Cache-Control" content="no-store,no-cache">
@@ -22,15 +22,19 @@
     #placardtog {position:absolute;right:0px;bottom:20px;border:0;
                  border:1px solid #aaa; border-right:0; min-width:5px; height:auto;}
     #placardtog {width:1.5em; text-align:center; padding-top:0.2em;}
-    #placardtog:before {content:'i'; font-size:90%;}
     #placardtog.tog_toggled {visibility:hidden;}
     #placardtog.tog:not(.tog_toggled) {visibility:visible;}
     #placard .close {color:#eee;}
-    #placard .rowsect, #placard .cell { border-color:transparent;}
+    #placard .rowsect, #placard .cell {border-color:transparent;}
     #placard .inplabel { color:rgba(255,255,255,0.8);}
 
-    .postres {overflow:auto; height:8em; background-color:#eee; }
+    .postres {overflow:auto; height:8em; background-color:#eee; color:#888;}
     .fmtline {display:block; margin-bottom:1em; white-space:nowrap;}
+    .box, .tabsec {border-bottom:1px solid #ddd;}
+    .tabbox {background-color:#ddd;}
+    .box {padding-bottom:1.1em; padding-top:1.3em;}
+    .tabbtn {border-bottom:0px;}
+
     .lotlist {font-size:95%;}
     .lotlist .fmtsubline, .lotlist .fmtsubline2 
                {display:block; margin-bottom:0.3em; font-size:90%;}
@@ -61,12 +65,15 @@
     .time {font-size:103%;}
     .qty {font-size:105%;}
     .seedaddr, .err, .stat {font-size:110%;}
+    .seedaddr > a {color:#777;}
     .name, .nameinp {color:#30c030; font-size:110%;}
     .name {overflow-x:hidden; text-overflow:ellipsis;}
     .hash {color:#30c030; font-size:90%; border:0;}
     .author, .autinp {color:#2050c0; font-size:110%;}
+    .author > a {color:#2050c0;}
     .vfix {vertical-align:bottom; margin-bottom:0.35em;}
     .owner, .owninp {color:#c06060; font-size:110%;}
+    .owner > a {color:#c06060;}
     .authorerr {background-color:#303030; color:#ffffff; font-size:110%;}
     .CIDinp, .autinp, .owninp {font-size:105%;}
     .tus:after {content:'.'; opacity:0;}
@@ -77,8 +84,31 @@
     #placard .CID, #placard .value {color:#8f8;}
     #placard .value {font-size:95%;}
     #placard .name {color:#ffa;}
-    #placard .author {color:#bbc2ff;}
+    #placard .author > a {color:#bbc2ff;}
     .smallparts span {font-size:95%;}
+    #popsync .popcontent > span {white-space:normal;}
+
+    @media all and (max-width:500px) {
+      .addr, .CID, .author, .owner, .CIDinp, .autinp, .owninp,
+      .seedaddr, .err, .stat, .lotlist .url {font-size:95%;}
+      .priv {font-size:65%;}
+      .pub, .pubinp {height:4em;}
+      #placard .CID, #placard .name, #placard .author, #placard .seedaddr
+        {font-size:90%;}
+    }
+    @media all and (max-width:350px) {
+      .addr, .CID, .author, .owner, .CIDinp, .autinp, .owninp,
+      .seedaddr, .err, .stat, .lotlist .url {font-size:90%;}
+      .priv {font-size:55%;}
+      #placard .CID, #placard .name, #placard .author, #placard .seedaddr
+        {font-size:85%;}
+      .poptitle {font-size:14px;}      
+    }
+    @media all and (max-height:600px) {
+      .raw {height:10em;}
+      .postres {height:4em;}
+    }
+
     #back {z-index: 0;}
     #barmain, #placard {z-index: 1;}
     #popcontent, #popseed, #popissue, #popxfer, #popsearch, 
@@ -88,22 +118,39 @@
                    #poppub, #poplottrace {z-index: 3;}
     #popJSON, #popraw, #popJSONx, #poprawx {z-index: 4;}
 
-    /* TODO: icon font*/
-    .imgissue:before { content: 'I'; }
+    @font-face {
+      font-family: 'Icons';
+      src: url(data:application/x-font-woff;base64,d09GRgABAAAAABlUAAsAAAAAN2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABCAAAAEYAAABgDRsaFGNtYXAAABi4AAAAmgAAAWRADW51Z2FzcAAAF2wAAAAIAAAACAAAABBnbHlmAAACMAAAE+0AAC2saBXqXGhlYWQAABbMAAAAMgAAADYBUi5daGhlYQAAAfgAAAAdAAAAJAPiAlFobXR4AAAXAAAAAGwAAAF8veQISmxvY2EAABYgAAAArAAAAYAACXRUbWF4cAAAAhgAAAAVAAAAIACSAa9uYW1lAAAXdAAAAUQAAALHC1b7T3Bvc3QAAAFQAAAApgAAAOvM2TUGeNpjYGb8zziBgZWBgdGHMY2BgcEdSn9lkGRoYWBgYmAEQihgFGBAAw4MSgz1jA/+AyHjAwYFkBqwwgeM14EUkA8APQoNSwAAeNp9zmczAgAAgOFHd1bIKDIjK5QtIzPKSDZZEedrpzvn/59+gffu+f4K+L9KXaMmzVq0CmrTrkNIpy7deoRF9OoT1W/AoCHDRsSMGhM3bsKkKdMSZsyak5Qyb8GiJctWrFqTtm7Dpi0Z23bs2rPvQNahIzl5x06cOlNwrujCpSvXbty6c+9ByaMnz168KnvzXv/+8NkQCH7Vvn9/atVcvvgHBXYWzAAAeNpjYGRgYHzw/wEDA5MgAxAwAbkMqCAeAFU+AzcAAAB42mNgZGBgiGdcz2DEgBUAAB/zAUMAAAB42u06C5QbV3Xvaj5vftLMSJoZSdbu6rOr2Y/X3l1Zmt1NsIWTJnHi+JeQtZPYlklIMMQhUEgoOI0SxzGm9PBvKJ9km/BrCSUh6QkUTjGflsOBECgtodA2DqXQQ8NJWppyoGXc+95oLe2uhA0UDj2noxnNfe/dd+e9++73zZAYIadOwjPwGJGISkhAA/AB8JqaugMO7QrfCveEj66HLc3Weji0E4sD4cfWwRYinO4XIwoxCJmenj7rznjEiHQqhG/Dt4hMEuy5NGCdPbz7NLh98/wDCozNht/NqPsbqY2lh5UPn9uA0bnwC7lNw43kpgMRDe3UD+BH8ASORiOEPdgH2ZkJAD4dfmUapiD85v4XH4BhuCF8fBqm58Nv7b9uDwyzvsDGHyNwktTw6fUZr14P8KxUaL2+BMsduCRTWabVoO4G7hLio5M7JiRVFFWxXp9OHpyTFElUxNK20andFUWXZV06+MFGYyGjv2qoPi7nQbXU8fPrj40kZZNSk8pgWmOKYuJJY256fJ2g6Qo1xJds2/bRixbTFgVFoEldVxw2XokUkN/4I0NkPamTa8lbcBIVv1Ipl/ngHDvteq5bLc6w8dXsDdjmz7jTruthtTflOuVaqmhXnart+xsYTrUWdfTScrnsVGdcx4lIBCVGN/DrlfJM3feoy9DKHieMtfVqNSiXeDt7vDfDOnkOdkR68JkL1mgD2knNprKiyNTWoMlhQdaOQYyqsQbIAjSb4SNfan0XJFEy5Linqhqo1LKoqqlKxgCqy4KMkqTJsga3A/aQdQpGlmoq1iLHwMaGGOiK6iVAiouSyKoVBeA1W9KixB8cNrsGUdAymnUOINVGTKUxaIY3wZta4bN3T8iaJIoDGlUcIy+reVVeYzgK1QZEUdLkcdY/P96Fs4bj5LtwJhhOJI8HSRPugt8jk+QqXJ1gA2dQwBnk0LRbrTq4WMhmzlC/PsNWyq+geCE324vi91uUSgmJ1QJkOi4KzMUERUrIMcuLM94lkHcW8q5oSFRRNOSDRpFDR88KCzLTskHFWBmbHONcPsFNfIKlmChYyryhyKZsnA0SESNGwCJCKikRnxDbLtpFwMsWoilG/IiYwEWt5hVTXhAjIepj2IATLb5mndXjUDNsNVsNWAybeLVwARfBWoHCoWeBLE7xcRTa4zDICJkgJMXH4VOf2kVnpN9QRlBH7CIOAgey2NgSnIBWuNhrPNAIGwVYxIGcQPC5l5579SKQf31XryE9iCgFZnNeSq6Ad0OLsEK5hrJRkj0mEtRlsiG7VdSxGv4x1YPfvxG0pJaGlxgCgGC8BBzNMOFGTQKQNJAOaaKoHTISWvIGTRC0G5KabhK0psvtxGayjez+xS3FDGMOcqa2oe6h5KbZCGsbKoGDkuxUa+Xaz6Xv/1yemSkPz8wMZ0ulbKZcvrww8qLhn1djn5obGa3PjfjBgL9mjc8ux7nD9f6AzZ20554nRVzzMZz9ZTj3Yt9pV8oCk8sRPhunHPSVzzbncMpRN3gwbHWNtQu2QiYSJ9lR6CU2Oxr8FokUnFw970UOo/S1wtZioVB4tpdETaHh1GmhQHUEmMrJ5BVkK7wR3oda5+DsJ0hAzkPPdnqhgj5L6Z/G6LfYRwoj1wwfG5ycHBxau3bIGRx08KqyyvtXVD7pXON6t6jrCsXJyWJhXXbI9YaGPHfoy7xeWVX/f3jcAurZk/AUyloZrT2OGFAs8KS+zEOFlMy94giPFvwUb/NRzT0fJ1T1UuhTR+RKIGCEgRGFR720S1PwuQupqalp+m/UEinqOVBJTqjwMjUhSxSLgiToUiYWi12GMFyUBDkWvjHGPKUoPiMIArQQhMMXUlUSWHeJihYNty+ntl5N6ootOQKS2CleFN4vovNESvAQpwSx38WOED5+2pafQEgjNhlnuoTqEkwzSyoUa4EXUOa+lnTGkzs6E6AFbUGrESIFNJHNI3thP6iSYulqUqY4GUrlpKpbioQuvcVsaIOZ/nCxsbjYKNzUS+ijuO1u8ltwPbwBIyLkOfUCH140cf/7Jn4Hmmvvf+/aV3Oce8n58DL0w4iTCjzqB38UoexfQsFBvZOshwNwP5c7kuopTX88e+Hnz/PtTMZOeh5MVD48Nva1V/NC0s4wGszWnkAZmMB4jEBtyTqcthYOZ0jbg0d2h2P4qS5ORWeN2572Sbkr8H2Xc9Xt2CMKpMFVv8k1vzF6QS43WMznt05MbM3ni4O53AWjB/ScmRiyrKGEmdP1pMwPDCSz8cSgqaPLpxro5mAinu1qhduKkTGJDEtRKOXzW8Y4UU5+bEs+XxLCE130up9iYxW8R8M47j2AoL2slfF7Bnn1U7TN/4B+yUfPFJBN5EKynSyQ/eR68jJyC7mNHCNvxNW9l3yAfIQ8Sj5FPk8eJ0+QJ8n3yDPkR+QUUDDBgyEM8tdDAJvgQtgOCyhV1+Na3wK3wTG0I3fDPfCnZ/Z3FGWVVvy61777v+LyyK/5ecH/Un+/zx3O0N7vLvG4whFWhBs/K4rYiQGq1nUVVpSHVpSLZ2g/U38WXP1aH3jXL9n/2Ir6wooyxPo0FM/UcTj8xFePXNMVxcEtnVitO/4hLFZ7tD2iy9r3F/yKyw+07+Pt+9pfcfn2X7L/7mWrtvoKwzMg9LuugNfc+Z9wc1eo3J0HZMg0uZhcQ15MDqFdLPV2SGW71HFCywLgVL0LK9oGiVzSSKVTFRFs75V46Epr/A/Iul2DQ+Xy0OCudR1oZHMmm89nM5tHOtDXBCkGMTMeL6cNR9Msmp100uV4+GPMVzXHQDBuIoIkIIIzmU1jXNzEPHAFZQ6FN6ygzSE4X9ZlOS5zSpIkJRQpHU+UnJcqCSzxB2Mr4jilRDwtvXZxsVXALA2juyW/JWFGUSPnkvPJVnI5uRo9/g3kleQwuZO8gbyNvJu8lzxAHiGfJJ8jXyJ/Q/6efIc8Tf6D/DeIYEAa8jAMa2EDISOUBS3BL5SPOWdrZvuZ8TOZ/99UtwI3v3C6fPmRif5e4miXlbqcma31K4zab/cxckvXt35O6/4bY9U/v6Lh6eZUeWfrIz/DUD+vO6l+PTMe685gYfqZXjhLEwi/qaYVY/ilHCdDxjAP6LcDILU3EZxi2xS20nZy3Zo165J2ugMBOUU4ECO8EhorEDi0yP8LBV7DH98ggHnE35EXkHehhSiWViUEld6JQjvt6k4Q5C4T3VVfHil20WhTOk2q27y3bbnrOssoRid8MHxQUgVBZEZTVSxNTWmiKohUkKgQEzB7SKiqaxi5eDxnGK6qJhATG6gkUFFQRS2lapaiMgssCoIqhV+EXAxBRVKSKqPFqKAZTlKZxnVj0LYHDT2OhSRab0aHUVCTiI5DiAGnEc8nzHzcSClKXBJVSdIlNY1OQzcH4olMlJpEKUkmER8wdXQvaRWRJFWU4oqSMuJ5M5GP81lNUYsqJjWSmCNx6opoU12gqbgxYLojZsKyEuaIaw4Y8RQVdGqLCvZCVaQ0aVBTwe58PaskC4/Bw2QXuY+925BlX16+epztHZ8Z8Z8xmMrL1qDjVTtYFZmy/YQSR3bkJRwmDitkgUZPXUGy3hnBUjr6BUe2VdWm3AtzP3upbOF6KIyfqiiIopAoJZMjya3IDREPnDu1VCXFcFSLOsgqMcL9XqJsJ4uJnCiA2K7KUUtRTLlDfFc+L3co07hCTaqlNDWt7uzQv9GRFQBFFmVJ0NCWSYIa2yolkAoKE98K0URZkYy4CI69VbaplmRbJ5pJZSOGj8IHxQzZibDYbgj2GrESMcPMoGEUNSGiklHEmEJj6EOoLGAlFXfkdbH7CZIeE5GcKImmsqv9nJSiJZTovUz0HukfiYdZ7UZyKcZZJNhQrzGup5e4HulvrRgty+k1r7E9obTrtPP8tpY7NFqhWqRyXveuih9pdrX9LqYJV+PIQNe1wdScZsoS2nX8M7W51KCm68xLXA0tuxBPeMrexFgu+7zihxQvES/Yxedlc2OJvY+xVWRLz1ZxLj5oWgXbLljmYHzuJC7PoGzIeOY3eJnx5HZUoMSAZQ0kUK22J8cz3oZ81D6Ii/keMaFpWXNwYCaZyooHtplZTUuIB8RsKjkzMPgULhs/JGGbYoj8MJRtTFfqJA9fhIfIJLkAbZ/fxx61Z9yG2J4aMqPvJj58+gBGBYKQc71zisU518nmPPecItP9lHpARM1XhawgsG2z8P22mRj1vDHLSiUTZgQlrzzAbIirF8/x3DVZ15kvFs9xvZwgxBT5hUxoM6IiovJ/zBs1TTtlmeOeyyHTGncJ3x9snN4bOh/jRbbf3z0pZ+m+LPZro9B+wXhQXlbpwGKh41u69m+g0YEXO2AHarTYi7Z4PKOoGBQ0O76pyZtPdjAj8MSK/lFlk/fnlDDl4PuFDdSFN/Gc4y7y8aV8Y5nQRmkDXb1o0cy8LnfTvT/WPutdTrHf5lqX82tTC7pylfbp1Hu7Ua8WPQiIf3GhOOu6s8XCxX43XOjF0PvZi1w0c6hITJ1QqXjRVAxXR3+D0qS7Bssw4lSUUQ94xhGlNbGYLFLWInfjTqTHXXfS8yZddzytu8xpaR5zrCk/nR5znLF02k8xJ+tpkahCI2nb6wcG1tt2sgM1ei3c7QIVmEIKwA+BqSVWyTiFpKYlI2MtoP2UDUoTlA+TDxgL1JCxAZu7sb+nm5Is4WnqUhw9gxLojooWRTVZoICGU0U7ozp6oFiUxiW+R3sFmYBH4HVEZ1ofsNdyHiZGHjxy9Oj40bvGjhyZuPPoFUePjh49ivDaI0eZrSCnfoDy9TWisT1b8H2KfQLPDyQa+EHgIQE/Rh7avv2h1uA99wy2TpGb3KtunZ299Sr3JsjmFhdzhx+87LIHD390/vDu5Mtfntx9eJ5wudVPPQfPwZMot2vJPLNDffPk2ozLxZYLJxfaet3jg3fY6AN/2QZy7wR4Zs/m0dHNe2aqV26uVDZf+S/m+z9gvH6Tt3Onu2nU9DzTQsX+Qq/U1u3qVWVU7rKmp+yZfW9OvPWt8bddfZtrWq5rmS7n76WkCg/DO1bx9+Hjx8ePv37s2LGJ1x3fd/z46PHjCK89dpwQu/3+jMXCPtrlBsYv15Ibya3kGPlD8iHyZ5jbfoM8DQQwak3141C0YRBUI19XHonUrRzFPdV2iFKuVf1at56yuo5yO+X2VsISUKWRB13qHlSdcqSnnrPCQnRZkFo1uvtLQLntYiMyDtrTyiqLMdJlXGj78UL7ud3PkSKM9viiwrMzC8VCpVIoLsx0oNcB17NNXM1mw2eXFZ+JlLC5sCDpsoQxkSJGqrftShFDD1WSdWlbpHDzzUhZFx7kuruJl2B2R3OhTePsKbTafSNCQ1MYf0uajJEvTcjo1URZCP9CRl03FVlDgsKUIGOMLuZ7IMLmHohwYgUPOBSeYEbS5qepLHYXIrhR2IfJgKjIkoGBviRr8hg1JBk9rRTbhyVJE7c0evRuNKJS86y7N7sf20Rjpdk81jVwViyJKMsGC08VW0OrxTIFRQx/elZo/J2miQr4Q3iCUNQ+k6TIMMstwaN+kfp8f8xrv3FmaaW3FAAEdfSLqBkOfKxYGQi/MVQpP//734fv4wG7wzqVY/WYQeFiaiAg0zffdx888Zz49a+Lz20tDOOvrMr3ySr/e36xyOxaleR4HmKhvZwkcziGyOG2PS4+ymdvvYLeb8h9z/UcmRYrfq0ewHUYrKvSO3nQ/qVstRqE39ZSlCoKpSkNNnB4S4q92Au/wf4hJ6tRLK/KrdZ1111XRcykHj6GyR3vlbTB2vFDoK9l2PiHNusCshU+BQf5uz2+TwZ3PXDl/Nu/Awf/5Kq5t//T/39jw7+xiePK7oYQ3sK/sUmgfGXIAP/WZi3GXXVyDv/ig+/COszQ9oMcXmQCV2R/1TKXB/xbkoeewSmc32i86447/qvR2NNofJz/P7px48LCxo0bIfvjH79w8+bY3ByEF3RFo3/eBb/qvPP29ToXN/PjE+edF4WgP+n0+Un7Kwfp9Dd7nT1tIs30SRjsfhEmXe2zon7Vfg002syu7S2XR0fL5b21DtR5Q9qBWj2D5V6VrVarsIIgh+ArK0hy6KZegWcv6ATfukZ9MkkG/h0+yb5xTEXsqFK/umovfym56n59H73Wf2rikoE15UZz70W5tDtbKMynPQ/A89LzhUTG0D1lJDFgm8P25CUD+RJAKT9wySR8srAmf8n4wYNDs2knk3XcuWJh3nGyaAp0xddsWaLFgfylE2u3DuSL0fZb4dTT/F1FnFTYe3TqOxhOVdFSYjjVN8c7efLk+3YUbri2cOGNPb/PahUajcKmO7/6l595/M4b+31PIOB1M8rUQluiljKWVS83qtMRk9xVMiKtytbajIz28fz6qgnA3emxdGrYNIdTDKiYiVQqYVZSvWvDvzbRBOChOKZVwvzbMDALL1mwLirpg6zUwYEFXdXytp3XVN2IxycKQxPxuKFpWt6y8nhjdUMFVveIoio5y84pmMWpatY0MypL59SMaWZV9immkrOtHCItfa/7Tfjbn/G9bnE2/EG2+3vd0lz45Wzne11ADl8LfwUvYl9qsS8uAt+5+DvveCc4+3cdPbwD219A9sFH4FCX/b/53otnjzwBh+69ZPbI10mUA0Q2gOXVXXE6bS9TtcZ/PdbJ65dVQ7M477pZiH02+vih0WiMY56GyQ6vz7rufHEKxYYf3QIEJ3mbkqCfjb7HwK7jghAD4PW89+KKPpwO48UryfVwB7xiVXx+6+69Y/v2j161Z+LK3W/Zs3d8//7xq/es3bOH/A80Cay9AAAAeNqN0K8OgmAUhvHHif8pzuCc6NBNRYVuMHgBBAPBSzB4AUQCkQsxEAxGL8BgMBgIXIjRMz82sDDP9ovnfc8OfGcjfHHLvKFyhqoL2l4kUDuJp1J/KI07NANoyX7bEJc/vDLS0dmCfsx1k1zPzPUpCGHgwXAHRqCMDjB2f5l+JoaJJiRzqsPMK5Hm5lGB3L24giVZy1RZhcoaxbaE/MiOMrLjSL8Tl/kAsnk6mHjaY2BkAIPZH9TWxvPbfGXgZgLzL4jYCoNp+Q29DAz/7zMxMD4AcjkYgAwGBgAjqwo4AAB42mP8yMDACMKfGFgZ/zMwMDEwcAExiFYA4kwoG4SzkcRhYkVQjCyGD0+H0vOBeBZYnyBcDtkMXGwQdgBiYyS+GVQMm31hUJobiH0JuI0fiY1svhs0HFiwqEV2GysQe0HZoVC6BJ+dAOMCDOkAAQAB//8AD3jalZDBSsNAEIb/1VixguDF8+JJsCQqItibIIoHLy16NqnbJGCyZbNFvHsTn8CH8eAb+ET+SUZtay8mbPLNPzP/zi6AbXxCoX1OuFpW2GLU8gr5XHiVPBAOyHfCa9hBKdzBOp6FuzjGC7tUsMHoAe/C9Ff7wvRXp8L0V5fCAXbVjTD91aNwhzWvwl3sqTfhTRypj6ExOvN+0o+iNPfZNAlHtohc7EyS+56ubGF0PrJlpcfOFjUW1pbIMYJFwWV5jgEMUkw5bwy3kJuPblnpUFGtI41DhDj4Nr1oRE85ZVnZlMaMDe6pJXji96qxuxa7EENmDfWMdR4T9BHxTbmBpzZlVygDRI2bY3XSZHvsqppM3d+OWVLRGLOq1vWfY872zx/aLeRmI40zTjb5mb7eZelFLLj83seY5Phf7vvvs38ByfNzYXjaY2BgYGaAYDkGRgYQsAPygCxGFyCbhUEBTLKA5er//weSSv///78PVcvAyMYAY+IBjEzMLKxs7BycXNw8vHz8AoJCwiKiYuISklLSMrJy8gqKSsoqqmrqGppa2jq6evoGhkbGJqZm5haWVtY2tnb2Do5Ozi6ubu4enl7ePr5+/gGBQcEhoWHhEZFR0TGxDAMOCIQSAAp1HxoAAA==)
+      format('woff');
+    }
+    .close, .closeleft, .help, .icon, #placardtog:before {
+      font-family: 'Icons', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .imgcontent:before { content: 'C'; }
+    .imgissue:before { content: 'I'; /*url('key.png');*/ }
     .imgsearch:before { content: 'Q'; }
     .imgnet:before { content: 'N'; }
-    .imgkey:before { content: 'K'; }
-    .imgrand:before { content: 'R'; }
-    .imgcreate:before { content: 'C'; }
-    .imgsend:before { content: 'S'; }
-    .imgopen:before { content: 'F'; }
-    .imgxfter:before { content: 'T'; }
-    .imgjson:before { content: 'J'; }
+    .imgdoc:before { content: '?'; }
+    .imgid:before { content: 'p'; }
+    .imgkey:before { content: 'k'; }
+    .imgrand:before { content: 'r'; }
+    .imgcreate:before { content: 's'; }
+    .imgverify:before { content: 'v'; }
+    .imgsync:before { content: 'n'; }
+    .imgsend:before { content: ''; width:0; }
+    .imgopen:before { content: 'f'; }
+    .imgiss:before { content: 'i'; }
+    .imgxfer:before { content: 't'; }
+    .imgadd:before { content: '+'; }
+    .imgdel:before { content: 'x'; }
+    .imgjson:before { content: 'j'; }
     .imgraw:before { content: '1'; }
-    .imgpop2:before { content: '>'; }
+    .imgcache:before { content: 'c'; }
+    .imgpop2:before { content: '>'; /*font-weight:bold;*/ }
     .imgpopleft:before { content: '<'; }
-    
-    #popsync .popcontent > span {white-space:normal;}
+    #placardtog:before {content:'V'; font-size:80%;}
   </style>
   <script src="../../lib/js/extern/ui/transev.js"></script>
   <script src="../../lib/js/extern/ui/elemstate.js"></script>
@@ -172,19 +219,18 @@ class="bar barmainlt f0 widall gridview solidsep"><div class="cellgroup">
           <button ESMcssroot="togbigsz togwid2 tog" ESMtoggletarget="popcontent"
                                   ESMdeactivateid="contentclose">
             <div class="togcontent togbigsz togwid2">
-              <div class="icon imghash"
-                   data-label="content"><span>CONTENT</span></div>
+              <div class="icon imgcontent"><span>CONTENT</span></div>
             </div>
           </button>
           <div id="popcontent" 
                ESMcssRoot="lev1 slidefromleft popwid25 lt undermainbar slide" 
                ESMfocusid="content_open">
-            <div class="pophead"><div>OPEN CONTENT</div>
-                      <button id="contentclose" class="close"></button>
+            <div class="pophead"><div class="poptitle">OPEN CONTENT</div>
                       <button ESMcssroot="help" 
                               ESMtoggletarget="popcontenthelp" 
                               ESMdeactivateid="contenthelpclose">
                       </button>
+                      <button id="contentclose" class="close"></button>
             </div>
             <div class="popcontent">
 
@@ -229,14 +275,13 @@ access to the local file system).
 
 
 
-              <div class="br7"></div>
+              <div class="br5"></div>
 
               <div class="line br15">
                 <div class="submitborder"><button class="tog" 
                         id="content_open" onclick="id2el('content_file').click();">
                   <div class="togcontent">
-                    <div class="icon imgopen" 
-                         data-label="file"><span>open from file</span></div>
+                    <div class="icon imgopen"><span>open from file</span></div>
                   </div>
                 </button></div>
               </div>
@@ -288,15 +333,15 @@ access to the local file system).
           <!-- END SEED TOGGLE -->
           <!-- SEED POP -->
           <div id="popseed" 
-               ESMcssRoot="lev1 slidefromleft popwid30 lt undermainbar slide" 
+               ESMcssRoot="lev1 slidefromleft popwid25 lt undermainbar slide" 
                ESMfocusid="seed_keybtn">
                 <!-- SEED HEAD -->
                 <div class="pophead f0">
-                      <button id="seedclose" class="close"></button>
                       <button ESMcssroot="help" 
                               ESMtoggletarget="popseedhelp" 
                               ESMdeactivateid="seedhelpclose">
                       </button>
+                      <button id="seedclose" class="close"></button>
                       <div class="poptitle">ISSUE/TRANSFER</div>
                 </div>
                 <!-- END SEED HEAD -->
@@ -315,15 +360,19 @@ access to the local file system).
 <div class="popcontent f0 tminus1 scroll"><div tabindex=0 id="seedhelp_content">
 <p class="br">
 A normal bitcoin address is used to identify an author or owner.  
-An existing address can be used or a new key/address pair can be generated.
 The key for the address is needed to sign new transactions.
 </p><p class="br">
-Generated keys or passphrases need to be written down or memorized 
-(this app does not save personal information).  
-Made up phrases are usually not secure 
-(<a href="http://www.leebutterman.com/passphrase-safety/" target=_blank>phrase entropy 
-
-tester</a>).
+An existing bitcoin key or brainwallet passphrase can be used, or a new
+key/address pair can be generated randomly.
+Randomly generated keys need to be written 
+down or memorized 
+(this app does not save any personal information).  
+</p><p class="br">
+Special care should be taken when composing passphrases that will  
+be used as private keys (made up phrases are usually not secure). 
+A <a href="http://www.leebutterman.com/passphrase-safety/" 
+target=_blank>phrase entropy tester</a> can be used to assess
+the strength of a user defined passphrase.
 </p><p class="br">
 The author/owner address holds content collections, 
 i.e., content issued and/or aquired.
@@ -332,9 +381,12 @@ Content is issued by creating a transaction that sends an original or
 an edition
 of the open content to the author's address 
 (the author is then the owner).
+</p><p class="br">
 An issue transaction, once sent and confirmed,
 serves as a timestamped certificate of authenticity
 (it holds the author's signature).
+Rarebit clients will not allow users to create issue 
+transactions for content previously issued by a different author.
 </p><p class="br">
 Content is transferred by
 creating a transaction that sends the content from the 
@@ -364,55 +416,63 @@ Any difference in content results in a unique Content ID.
                       <!-- END HELP POP -->
 
 
-              <div class="br"></div>
-              <div class="b tminus2 br">AUTHOR/OWNER IDENTITY</div>
+              <div class="br4"></div>
 
-              <!-- SEED KEY SECTION -->
-              <div class="line widmin40 br15">
-                <div class="f1 tplus1 margright0 vfix" id="seed_addr">
-                  <span class="cursor f1 tminus2"
-                        onclick="clickSection('seed_keybtn')">
-                                  [specify/create key]</span>
-                </div>
-                <div class="submitborder right"><div class="popwrap left">
-                      <button ESMcssroot="tog" 
+              <div class="line widall tabsec">
+                <!-- <div class="b tminus2">AUTHOR/OWNER IDENTITY</div> -->
+
+                <!-- SEED KEY SECTION -->
+                <div><div class="popwrap left">
+                      <div class="submitborder tabbtn">
+                      <button ESMcssroot="togwid tog" 
                               ESMtoggletarget="popseedkey"
                               ESMdeactivateid="seedkeyclose" id="seed_keybtn">
-                            <div class="togcontent">
-                              <div class="icon imgpop2 nolabel"></div>
+                            <div class="togcontent togwid">
+                              <div class="icon imgid"><span>author/owner</span></div>
                             </div>
                       </button>
+                      </div>
                   <div id="popseedkey"
-                           ESMcssRoot="popnosuggest lev2 popwid30 popdown" 
-                           ESMfocusid="gen_verifykey">
+                           ESMcssRoot="popnosuggest lev2 popwid30 popright" 
+                           ESMfocusid="gen_key">
                         <div class="pophead f0">
                               <button id="seedkeyclose" class="close"></button>
-                              <div class="poptitle">PROVE AUTHOR/OWNER IDENTITY</div>
+                              <div class="poptitle">AUTHOR/OWNER IDENTITY</div>
                         </div>
                         <div class="popcontent">
-                              <span class="inplabel">PRIVATE KEY OR PASSPHRASE</span>
+                              <span class="inplabel br2">PRIVATE KEY OR 
+PASSPHRASE 
+<!-- 
+&nbsp; &nbsp; [<a href="http://www.leebutterman.com/passphrase-safety/" 
+target=_blank>PHRASE ENTROPY TESTER</a>]
+-->
+</span>
                               <textarea class="inp keyinp br3"
                                         id="gen_key"></textarea>
                               <div class="line br4">
                                 <button id="gen_verifykey" class="submit"
                                         onclick="seedOpen();" title=
-"Use entry as key (made up phrases are usually not secure - see section help)">
-                                      <div class="icon imgkey"><span>verify 
-                                                         entry</span></div>
+"Accept entry as key or passphrase">
+                                    <div class="togcontent">
+                                      <div class="icon imgkey">
+                                                 <span>use entry</span></div>
+                                    </div>
                                 </button>
                                 <button id="gen_randomkey" class="submit"
                                       onclick="seedOpen(true);"
-title="Generate a random passphrase to be written down or memorized">
+title="Generate random key and associated passphrase, to be written down or memorized">
+                                    <div class="togcontent">
                                       <div class="icon imgrand">
                                                  <span>new random</span></div>
+                                    </div>
                                 </button>
                               </div>
                               <span class="hd err tus br4" id="gen_err"></span>
                               <div id="_gen_addr">
-                                <div class="f1 tplus1 br4" id="gen_addr"></div>
+                                <div class="f1 seedaddr br4" id="gen_addr"></div>
                                 <div id="_gen_testnetaddr">
                                   <span class="inplabel">ADDRESS IN TESTNET</span>
-                                  <div class="f1 tplus1 br4" 
+                                  <div class="f1 seedaddr br4" 
                                             id="gen_testnetaddr"></div>
                                 </div>
                                 <span class="inplabel">BITCOIN PRIVATE KEY</span>
@@ -424,17 +484,23 @@ title="Generate a random passphrase to be written down or memorized">
                         </div>
                   </div>
                 </div></div>
+                <!-- END KEY SECTION -->
               </div>
-              <!-- END KEY SECTION -->
+
 
 
               <!-- ACCOUNT SECTION -->
               <div id="_seed_avail" class="line widall">
 
+                <div class="line box widall br15">
+
+                    <!-- <span class="inplabel br2">AUTHOR/OWNER</span> -->
+                    <div class="f1 seedaddr br6" id="seed_addr"></div>
+
                     <!-- SEED VALUE SECTION -->
-                    <div class="line br10 table widall">
+                    <div class="line table widall">
                           <div class="padright2 tablecell top">
-                            <div class="inplabel br3">SEED
+                            <div class="inplabel br2">SEED
                               <div id="_i_sync_testnet"> &nbsp; 
                                 [<a href="http://faucet.xeno-genesis.com/" target=_blank 
                                    title=
@@ -451,11 +517,16 @@ title="Generate a random passphrase to be written down or memorized">
                           <div class="padleft2 top tablecell">
                             <button id="seed_sync" class="submit"
                                     onclick="seedSync(1);" title="Resync to network">
-                              <div class="icon imgnet"><span>resync</span></div>
+                                    <div class="togcontent">
+                                      <div class="icon imgsync"><span>resync</span></div>
+                                    </div>
                             </button>
                           </div>
                     </div>
                     <!-- END SEED VALUE SECTION -->
+
+                </div>
+
 
 
               <div id="_x_seed_stat" class="line widall">
@@ -466,41 +537,50 @@ title="Generate a random passphrase to be written down or memorized">
                     <!-- FEE INPUT -->
                     <span class="inplabel">FEE TO ADD TO EACH NEW TRANSACTION</span>
                     <input type="text" id="seed_fee" value="0.00001" 
-                           class="inp feeinp br20"/>
+                           class="inp feeinp br15"/>
                     <!-- END FEE INPUT -->
+
 
 
 
     <!-- ISSUE/TRANSFER SECTION -->
               <div id="_x_seed_CID" class="tminus2 b">
-                           Open content needed to issue or transfer</div>
+                           Open content needed</div>
     <div id="_seed_CID">
 
-                  <div class="tminus2 b br">OPEN CONTENT</div>
+          <div class="br4">
+            <div class="inplabel br1">OPEN CONTENT</div>
+            <div class="f1 CID br2" id="seed_CID"></div>
+            <div id="_seed_issuer">
+              <div class="inplabel">BY</div>
+              <div id="seed_issuer" class="f1 author"></div>
+            </div>
+          </div>
+
+
+
+    <div class="line widall right br1">
+
+
 
     <!-- ISSUE SECTION -->
-    <div class="line widmin40 br3">
-                <div class="margright0 vfix">
-                  <div class="f1 CID" id="seed_CID"></div>
-                </div>
+    <div id="_xi_seed_issuer">
 
-    <div id="_seed_issuer">
-              <div class="inplabel">AUTHOR (only author can issue)</div>
-              <div id="seed_issuer" class="f1 author br"></div>
-    </div>
 
     <!-- ISSUE POP -->
-    <div class="submitborder right" id="_xi_seed_issuer"><div class="popwrap left">
-          <button ESMcssroot="tog" ESMtoggletarget="popissue"
+    <div class="popwrap left">
+          <div class="submitborder">
+          <button ESMcssroot="togwid tog" ESMtoggletarget="popissue"
                   ESMdeactivateid="issueclose" id="seed_issuebtn">
-                <div class="togcontent">
-                  <div class="icon imgpop2 nolabel"></div>
+                <div class="togcontent togwid">
+                  <div class="icon imgiss"><span>issue</span></div>
                 </div>
           </button>
+          </div>
           <div id="popissue" 
-               ESMcssRoot="lev2 popwid25 popup"
+               ESMcssRoot="lev2 popwid25 poprightup popright"
                ESMfocusid="origtx_edition">
-            <div class="pophead"><div>ISSUE</div>
+            <div class="pophead"><div class="poptitle">ISSUE</div>
                   <button id="issueclose" class="close"></button>
             </div>
 
@@ -528,10 +608,9 @@ title="Generate a random passphrase to be written down or memorized">
 
                 <!-- CREATE TX -->
                 <div class="submitborder">
-                  <button class="tog submitacts important" onclick="origtxCreate();">
+                  <button class="tog submitacts" onclick="origtxCreate();">
                     <div class="togcontent">
-                      <div class="icon imgcreate" 
-                               data-label="create"><span>sign</span></div>
+                      <div class="icon imgcreate"><span>sign</span></div>
                     </div>
                   </button>
                 </div>
@@ -544,7 +623,7 @@ title="Generate a random passphrase to be written down or memorized">
                           ESMtoggletarget="popsend"
                           ESMdeactivateid="signclose" id="origtx_sendbtn">
                     <div class="togcontent">
-                      <div class="icon imgpop2"
+                      <div class="icon imgverify"
                            data-label="issue"><span>verify/send</span></div>
                     </div>
                   </button>
@@ -553,7 +632,7 @@ title="Generate a random passphrase to be written down or memorized">
                        ESMfocusid="origtx_txhash">
                     <div class="pophead f0">
                       <button id="signclose" class="close"></button>
-                      <div class="poptitle">VERIFY AND SEND TRANSACTION</div>
+                      <div class="poptitle">SEND TRANSACTION</div>
                     </div>
                     <div class="popcontent">
                       <div class="br" id="origtx_qtys"></div>
@@ -563,8 +642,8 @@ title="Generate a random passphrase to be written down or memorized">
                       <div class="line br5">
                           <button id="origtx_send" class="submit critical"
                                   onclick="origtxSend();">
-                            <div class="icon imgsend"><span class="nowrap" 
-                                             id="origtx_sendlabel">send this
+                                    <div class="togcontent center critical"><span class="nowrap" 
+                                             id="origtx_sendlabel">send
                                        transaction (IRREVERSIBLE!)</span></div>
                           </button>
                       </div>
@@ -633,8 +712,9 @@ title="Generate a random passphrase to be written down or memorized">
                         <button id="origtx_confirm" class="submit"
                                 onclick="origtxConfirm();" 
                                 title="Click to indicate transaction has been manually sent">
-                          <div class="icon imgsend"><span class="nowrap" 
-                                 id="origtx_confirmlabel">transaction sent</span></div>
+                              <div class="togcontent center"><span class="nowrap" 
+                                 id="origtx_confirmlabel">indicate 
+                                       transaction sent</span></div>
                         </button>
                       </div>
 
@@ -663,7 +743,7 @@ title="Generate a random passphrase to be written down or memorized">
 <!-- ======= END ISSUE POP BODY ========= -->
 
           </div>
-    </div></div>
+    </div>
     <!-- END ISSUE POP -->
 
     </div>
@@ -671,28 +751,27 @@ title="Generate a random passphrase to be written down or memorized">
 
 
     <!-- XFER SECTION -->
-    <div id="_seed_lots">
+    <div id="_i_seed_lots">
 
-    <div class="line widall br15">
-          <div class="margright0">
-                <div class="margright0 vfix">
-                      <span class="inplabel"> &nbsp; &nbsp; </span>
+                <!-- <div class="margright0 vfix">
                       <span id="seed_lots" class="f1 qty"></span>
-                </div>
+                </div> -->
 
     <!-- XFER POP -->
-    <div class="submitborder"><div class="popwrap left">
+    <div><div class="popwrap left">
+          <div class="submitborder">
           <button ESMcssroot="togwid tog" ESMtoggletarget="popxfer"
                                    ESMdeactivateid="xferclose">
                 <div class="togcontent togwid">
-                  <div class="icon imgpop2"><span>transfer</span></div>
+                  <div class="icon imgxfer"><span>transfer</span></div>
                 </div>
           </button>
+          </div>
           <div id="popxfer" 
                ESMfocusid="xfertx_pub"
-               ESMcssRoot="poprightup popwid25 lev2 popright">
+               ESMcssRoot="popwid25 lev2 poprightup popright">
             <div class="pophead">
-                  <div>TRANSFER</div>
+                  <div class="poptitle">TRANSFER</div>
                   <button id="xferclose" class="close"></button>
             </div>
 
@@ -700,8 +779,8 @@ title="Generate a random passphrase to be written down or memorized">
 <div class="popcontent">
 
               <!-- NEW OWNERS SECTION -->
-              <div class="line widmin40 br10">
-                <span class="br b tminus2">NEW OWNERS</span>
+              <div class="line popwid25 br10">
+                <!-- <span class="br b tminus2">NEW OWNERS</span> -->
                 <div id="xfertx_newowners" class="items br"></div>
                 <!-- NEW OWNER PUB POP -->
 
@@ -711,7 +790,7 @@ title="Generate a random passphrase to be written down or memorized">
                           ESMtoggletarget="poppub"
                           ESMdeactivateid="pubclose" id="xfertx_pubbtn">
                     <div class="togcontent togwid">
-                      <div class="icon imgplus"><span>add</span></div>
+                      <div class="icon imgadd"><span>add</span></div>
                     </div>
                   </button>
                   <div id="poppub"
@@ -725,17 +804,19 @@ title="Generate a random passphrase to be written down or memorized">
 
 -->
                       <span class="inplabel">NEW OWNER'S PUBLIC KEY</span>
-                      <textarea class="inp pubinp br7" id="xfertx_pub"
+                      <textarea class="inp pubinp br" id="xfertx_pub"
                                  onkeyup="origtxClear(1);"></textarea>
                       <div id="_xfertx_qty">
                         <span class="inplabel br0">QUANTITY TO 
                                                SEND TO THIS NEW OWNER</span>
-                        <input type="int" id="xfertx_qty" class="inp qtyinp br7"
+                        <input type="int" id="xfertx_qty" class="inp qtyinp br"
                                 onkeyup="xfertxClear(1);"/>
                         <div class="line br3">
                           <button id="xfertx_add" class="submit"
                                   onclick="xfertxNewOwnerAdd();">
-                            <div class="icon imgplus"><span>verify/add</span></div>
+                              <div class="togcontent">
+                                <div class="icon imgadd"><span>verify/add</span></div>
+                              </div>
                           </button>
                           <!--<button id="xfertx_addavail" class="submit"
                                   onclick="xfertxNewOwnerAdd(true);">
@@ -744,7 +825,9 @@ title="Generate a random passphrase to be written down or memorized">
                           </button>-->
                           <button id="xfertx_clear" class="submit"
                                   onclick="xfertxClear();">
-                            <div class="icon imgdel"><span>clear</span></div>
+                              <div class="togcontent">
+                                <div class="icon imgdel"><span>clear</span></div>
+                              </div>
                           </button>
                         </div>
                       </div>
@@ -752,8 +835,10 @@ title="Generate a random passphrase to be written down or memorized">
                         <div class="line br3">
                           <button id="xfertx_add1" class="submit"
                                   onclick="xfertxClear();xfertxNewOwnerAdd();">
-                            <div class="icon imgplus"><span>verify 
-                                               new owner</span></div>
+                              <div class="togcontent">
+                                <div class="icon imgadd"><span>verify 
+                                               public key</span></div>
+                              </div>
                           </button>
                         </div>
                       </div>
@@ -784,10 +869,9 @@ title="Generate a random passphrase to be written down or memorized">
 
                 <!-- CREATE TX -->
                 <div class="submitborder">
-                  <button class="tog submitacts important" onclick="xfertxCreate();">
+                  <button class="tog submitacts" onclick="xfertxCreate();">
                     <div class="togcontent">
-                      <div class="icon imgcreate" 
-                               data-label="create"><span>sign</span></div>
+                      <div class="icon imgcreate"><span>sign</span></div>
                     </div>
                   </button>
                 </div>
@@ -799,7 +883,7 @@ title="Generate a random passphrase to be written down or memorized">
                           ESMtoggletarget="popsendx"
                           ESMdeactivateid="signclosex" id="xfertx_sendbtn">
                     <div class="togcontent">
-                      <div class="icon imgpop2"
+                      <div class="icon imgverify"
                            data-label="xfer"><span>verify/send</span></div>
                     </div>
                   </button>
@@ -808,7 +892,7 @@ title="Generate a random passphrase to be written down or memorized">
                        ESMfocusid="xfertx_txhash">
                     <div class="pophead f0">
                       <button id="signclosex" class="close"></button>
-                      <div class="poptitle">VERIFY AND SEND TRANSACTION</div>
+                      <div class="poptitle">SEND TRANSACTION</div>
                     </div>
                     <div class="popcontent">
                       <div class="br" id="xfertx_qtys"></div>
@@ -818,9 +902,8 @@ title="Generate a random passphrase to be written down or memorized">
                       <div class="line br5">
                         <button id="xfertx_send" class="submit critical"
                                 onclick="xfertxSend();">
-                          <div class="icon imgsend"
-                                 data-label="xfer"><span class="nowrap" 
-                                             id="xfertx_sendlabel">send this
+                              <div class="togcontent center critical"><span class="nowrap" 
+                                             id="xfertx_sendlabel">send
                                        transaction (IRREVERSIBLE!)</span></div>
                         </button>
                       </div>
@@ -891,8 +974,9 @@ title="Generate a random passphrase to be written down or memorized">
                         <button id="xfertx_confirm" class="submit"
                                 onclick="xfertxConfirm();" 
                                 title="Click to indicate transaction has been manually sent">
-                          <div class="icon imgsend"><span class="nowrap" 
-                                 id="xfertx_confirmlabel">transaction sent</span></div>
+                              <div class="togcontent center"><span class="nowrap" 
+                                 id="xfertx_confirmlabel">indicate 
+                                           transaction sent</span></div>
                         </button>
                       </div>
 
@@ -924,14 +1008,20 @@ title="Generate a random passphrase to be written down or memorized">
     </div></div>
     <!-- END XFER POP -->
 
-    </div>
-    </div>
+
     </div>
     <!-- END XFER SECTION -->
 
 
     </div>
+
+                <div class="line widall right br3" id="_seed_lots">
+                      <span id="seed_lots" class="f1 tplus2 qty"></span>
+                </div>  <!-- style="display:none;" -->
+
+    </div>
     <!-- END ISSUE/TRANSFER SECTION -->
+
 
                     </div>
                     </div>
@@ -974,11 +1064,11 @@ title="Generate a random passphrase to be written down or memorized">
                ESMfocusid="lots_CID"
                ESMcssRoot="lev1 slidefromright popwid30 lt undermainbar slide">
 
-            <div class="pophead"><div>SEARCH</div>
-                      <button id="searchclose" class="close"></button>
+            <div class="pophead"><div class="poptitle">SEARCH</div>
                       <button ESMcssroot="help" 
                               ESMtoggletarget="popsearchhelp" 
                               ESMdeactivateid="searchhelpclose">
+                      <button id="searchclose" class="close"></button>
             </div>
             <div class="popcontent scroll">
 
@@ -1018,11 +1108,13 @@ by entering the author's address.
               <span class="inplabel br0">OWNER</span>
               <input id="lots_owner" class="inp owninp br7" onchange="lotsNewSearch(this);"/>
 
-              <button class="submit br4" onclick="lotsFind();" id="lots_findbtn">
-                <div class="icon imgsearch"><span>find</span></div>
+              <button class="submit br7" onclick="lotsFind();" id="lots_findbtn">
+                  <div class="togcontent">
+                    <div class="icon imgsearch"><span>find</span></div>
+                  </div>
               </button>
 
-              <div class="line br3">
+              <div class="line">
                 <span class="hd err" id="lots_err"></span><span 
                          class="hd stat tus" id="lots_stat"></span>
               </div>
@@ -1081,10 +1173,10 @@ by entering the author's address.
 
       <!-- DOC -->
       </div><div class="cell popwrap">
-        <button ESMcssroot="togbigsz tog" 
+        <button ESMcssroot="togbigsz tog" id="doc_mainbtn"
                 ESMtoggletarget="popdoc" ESMdeactivateid="docclose">
               <div class="togcontent togbigsz">
-                <div class="icon imgdoc"></div>
+                <div class="icon nolabel imgdoc"><span>&nbsp;</span></div>
               </div>
         </button>
       <!-- DOC -->
@@ -1112,8 +1204,6 @@ by entering the author's address.
 <span id="_c_sync_testnet" class="tminus2">
  &nbsp; TESTNET enabled, details under Network
  <br/>
- &nbsp; See also Getting Started under ?
- <br/>
  <br/>
  &nbsp; Firefox recommended for best results
 </span>
@@ -1134,7 +1224,7 @@ by entering the author's address.
       <!-- NETWORK SLIDEOUT -->
       <div id="popsandbox" 
            ESMcssRoot="lev1 f0 slidefromright slidewid undermainbar lt slide" 
-           ESMfocusid="syncbtn">
+           ESMfocusid="sync_auto">
         <div class="pophead">
           <button id="networkclose" class="close"></button>
           <div class="poptitle">NETWORK</div>
@@ -1153,7 +1243,7 @@ by entering the author's address.
                               ESMtoggletarget="popsync"
                               ESMdeactivateid="syncclose" id="syncbtn">
                             <div class="togcontent togwid">
-                              <div class="icon imgpopleft"><span>sync</span></div>
+                              <div class="icon imgnet"><span>sync</span></div>
                             </div>
                       </button>
                   <div id="popsync"
@@ -1161,12 +1251,12 @@ by entering the author's address.
                            ESMfocusid="sync_sync">
                         <div class="pophead f0">
                               <button id="syncclose" class="close"></button>
-                              <div class="poptitle">LOAD TRANSACTION DATA</div>
+                              <div class="poptitle">SYNC TO BLOCKCHAIN</div>
                         </div>
                         <div class="popcontent">
 
                               <span class="tminus1">
-This will load transactions associated with the currently loaded content, 
+This will load transactions associated with the open content, 
 current author/owner, and any address entered into the search section.
                               </span>
 
@@ -1174,8 +1264,10 @@ current author/owner, and any address entered into the search section.
                               <div class="line br4">
                                 <button id="sync_sync" class="submit"
                                         onclick="sync();">
-                                      <div class="icon imgnet">
-                                               <span>Connect</span></div>
+                                    <div class="togcontent">
+                                      <div class="icon imgsync">
+                                               <span>sync</span></div>
+                                    </div>
                                 </button>
                               </div>
                               <span class="hd err tus" id="sync_err"></span><div
@@ -1193,7 +1285,7 @@ current author/owner, and any address entered into the search section.
                         ESMtoggletarget="sandboxpop"
                         ESMdeactivateid="sandboxclose">
                   <div class="togwid togcontent">
-                    <div class="icon imgpopleft"
+                    <div class="icon imgcache"
                          data-label="sandbox"><span>cache</span></div>
                   </div>
                 </button>
@@ -1202,15 +1294,16 @@ current author/owner, and any address entered into the search section.
                  ESMfocusid="txdb_data">
               <div class="popwid30 pophead">
                 <button id="sandboxclose" class="close"></button>
-                <div class="poptitle">INTERNAL TRANSACTION CACHE</div>
+                <div class="poptitle">TRANSACTION CACHE</div>
               </div>
               <div class="popcontent">
-                <span class="inplabel">TRANSACTION DATA</span>
+                <span class="inplabel">JSON TRANSACTION DATA</span>
                 <textarea class="f1 JSONtx br" id="txdb_data"></textarea>
-                <button class="submit important br" onclick="txdbCreate();">
-                        <div class="icon imgcreate"
-                             data-label="submit"><span>sync to text 
+                <button class="submit br" onclick="txdbCreate();">
+                      <div class="togcontent">
+                        <div class="icon imgsync"><span>sync to text 
                                               (if manually edited)</span></div>
+                      </div>
                 </button>
                 <span class="hd err" id="txdb_err"></span><span 
                         class="hd stat tus" id="txdb_stat"></span>
@@ -1237,8 +1330,7 @@ current author/owner, and any address entered into the search section.
                 <br/>
               </div>
               <div class="br10"><div class="tminus3">
-                Beta note: not fully tested on MainNet - 
-                use of MainNet is at user's risk
+                Beta note: use of MainNet is at user's risk
               </div></div>
 
               <div class="br15">
@@ -1304,17 +1396,17 @@ and combined as follows:
            ESMfocusid="docfoc">
         <div class="pophead f0">
           <button id="docclose" class="close"></button>
-          <div class="poptitle">RELEASE NOTES</div>
+          <div class="poptitle">ABOUT RAREBIT WEB CLIENT</div>
         </div>
-        <div class="popcontent f0 tminus1 scroll"><p class="line br right">
+        <div class="popcontent f0 tminus1 scroll">
 
-    </p><p class="br" id="docfoc" tabindex=0>
-    This client implements the
+    <p class="br" id="docfoc" tabindex=0>
+    This app implements the
       <a href="../../index.html" target=_blank 
          title="Rarebit project home">Rarebit protocol</a>,
 a method designed to 
-enable collectible digital works to be recorded and 
-traded on the bitcoin network.  Using a Rarebit client, 
+enable collectible digital assets to be recorded and 
+traded on the bitcoin blockchain.  Using a Rarebit client, 
 an artist or author can issue 
 digital content online, and collectors can trade the content 
 with the assurance it is authentic.
@@ -1324,10 +1416,10 @@ with a small amount of bitcoin value.
 This value can be transferred indefinitely while remaining provably 
 bound to the content it represents and to the author that originated it.
     </p><p class="br">
-    This app runs in the browser as a local process.
+    This app is serverless, i.e., it runs in the browser as a local process.
     Development and testing was performed on recent releases of 
     Firefox and Chrome (desktop versions).  A recent release of Firefox
-    is recommended (newer releases include a fast javascript compiler).
+    is recommended for best results.
     </p><p class="br">
     <span class="b f0 br">GETTING STARTED</span>
     </p><p class="br"><span class="b f1 tminus3">1. </span>
@@ -1340,7 +1432,9 @@ to issue an original or an edition of the open content.
     </p><p class="br indent"><span class="b f1 tminus3">A. </span>
 Establish a provable identity for the author by entering or creating a 
 bitcoin private key.  If the identity has no funding, use a normal bitcoin wallet
-to send a small seed amount to the address.  The seed is used to 
+to send a small seed amount to the address, then select 
+<span class="f1 tminus3 b">RESYNC</span> after the send is confirmed.
+The seed is used to 
 pay fees when creating issue and transfer transactions
 (TestNet: use faucet at
 <a href="http://faucet.xeno-genesis.com/"
@@ -1348,7 +1442,7 @@ target=_blank>faucet.xeno-genesis.com</a> to add seed;
 the Testnet version of the address is shown 
 when identity is established).
     </p><p class="br indent"><span class="b f1 tminus3">B. </span>
-Select the Content ID.  If issuing an edition, enter a quantity. 
+Select <span class="f1 tminus3 b">ISSUE</span>.  If issuing an edition, enter a quantity. 
 Select <span class="f1 tminus3 b">SIGN</span> to create the issue
 transaction, then 
 <span class="f1 tminus3 b">VERIFY/SEND</span> to broadcast it
@@ -1359,9 +1453,9 @@ of the content and that it originates from the author.
 After content is issued, a <span class="f1 tminus3 b">TRANSFER</span> 
 option will become available, which can be used to
 transfer ownership to collector(s).  
-Note that it is important to send exact copies of content files to new owners as part of any 
-
-transfer (a new owner can not retransfer content they do not possess)
+Note that it is important to send exact copies of content files 
+to new owners as part of any transfer (a new owner can not 
+retransfer content they do not possess).
     </p>
 
         </div>
